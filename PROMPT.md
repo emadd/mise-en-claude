@@ -130,7 +130,8 @@ then adapt.
   from `min(ceiling, cores − 1 or 2)`, then **throttle hard on current load and free memory** —
   **load is a first-class throttle, not a parenthetical:** a 12-core box at load average 60 should
   run 1–2 cooks, not 11. Scale *up* only on a genuinely idle big box. A fixed cap either wastes a
-  workstation or thrashes a laptop.
+  workstation or thrashes a laptop. **This governs mise's *own* work too:** on a pathologically
+  busy host, run your operations serially instead of spawning parallel sub-agents.
 - **Local-first, cloud-adaptive.** Prefer local development — it's faster, cheaper, private, and
   has the real toolchain. But adapt: if you're starting in a cloud/remote session, do the work
   that *travels* (planning, scaffolding, writing, reasoning) there, and **hand off the local-only
@@ -215,7 +216,8 @@ If there is existing code, make the work reversible before you touch anything:
     **local-only, never pushed**, and flag those keys for rotation regardless (they're already
     exposed on disk). **Or**, if they prefer: **remediate the in-source secrets to env references
     first** — keeping a pre-change backup copy as the safety net — so the recovery point is clean
-    history. Default to local-safe; let them override.
+    history. Default to local-safe; let them override. **A backup of a secret is still a secret:**
+    `.gitignore` the backup location *before* you create it, so a pre-change copy is never tracked.
 
 This snapshot is its own consented step — the recovery point comes *before* the Phase 2 plan, on
 purpose, so the plan is approved against an already-safe baseline. State plainly: "Your current
@@ -229,7 +231,11 @@ If a `.mise/` stamp exists and the user wants to update, do this instead of the 
 rescue flow (you already know the project — don't re-interview from scratch):
 
 1. **Read the stamp** — the mise version/commit that last configured this project and the
-   choices it applied (mode, stack, phases, skills, connectors).
+   choices it applied (mode, stack, phases, skills, connectors), **plus anything a prior run
+   *deferred*** (its `humanConfirmRequired` / deferred / beyond-foundations lists). Update mode
+   isn't only about guidance drift — **finishing the work a previous run punted on is a
+   first-class Update job.** If the stamp has deferred items (an ambiguous env-mapping awaiting
+   confirmation, unrotated keys, un-pinned deps), surface those first.
 2. **Fetch the latest guidance** — with the user's consent, pull the newest canonical mise
    (this `PROMPT.md` and its stack notes) from the source repo (`<REPO_RAW_URL>` — see the
    stamp) using whatever's available: `git pull` a clone, `gh`, `WebFetch`, or `curl`.
@@ -449,7 +455,9 @@ The rule: **fix the leak without ever holding the secret.**
   one isn't installed, offer to install it — but **installing the scanner is a global-tier action**
   (Prime Directive 1): get that higher-stakes consent, don't `brew install` unprompted. If you must
   fall back to `grep`, mask by **default-
-  deny** — output only `file:line`, never the matched line (e.g. pipe through a redactor). Reading
+  deny** — output only `file:line`, never the matched line. A portable, copy-paste-safe recipe
+  (works with BSD/macOS `sed`): `grep -rnoE '<pattern>' . | sed -E 's/^([^:]+:[0-9]+):.*/\1: [redacted]/'`
+  — emits `file:line` only. (Avoid fancy Unicode mask tokens; BSD `sed` chokes on them.) Reading
   a source file to *understand the code* is fine and expected; but never read a file *to eyeball a
   secret*, and treat any secret you do encounter as by-reference the instant you see it.
 - **Reference, don't reproduce.** In reports and diffs, refer to a secret as
@@ -457,6 +465,12 @@ The rule: **fix the leak without ever holding the secret.**
 - **Remediate structurally.** Replace a hardcoded literal with an `env`-var *reference* (you
   write `process.env.OPENAI_API_KEY`, not the key). Move values with commands that don't echo
   them. Add the file to `.gitignore`.
+- **Don't remediate with a find-in-file edit tool — it ingests the secret.** A normal
+  replace-in-file edit needs the *exact literal* as its search key, which pulls the value into
+  your context — the very thing you're avoiding. Instead rewrite the assignment **in-shell,
+  pattern-matched and value-blind** (`sed` matching the assignment *shape*, e.g. `s|= *"[^"]*"|= process.env.NAME|`),
+  so the literal only ever transits the shell. Reserve edit tools for files with no secrets
+  (`CLAUDE.md`, docs).
 - **Caveat — mapping can be ambiguous, and then it *isn't* context-safe.** When two call sites
   both look like `API_KEY`, picking *which* env var each maps to may require reading the value —
   which is forbidden. **Don't guess** (a wrong mapping silently breaks the app). Instead **propose
