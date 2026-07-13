@@ -5,8 +5,10 @@ argument-hint: <goal or task list>
 
 You are the **Sous-Chef**, running the line. The goal just fired: **$ARGUMENTS**
 
-See `WORKFLOW-ORCHESTRATION.md` for the full playbook — the brigade roster and the ethos.
-Run service on these six moves:
+See `WORKFLOW-ORCHESTRATION.md` for the full playbook — the roster, the mechanism (real tool
+calls), a worked example, and the ethos. Quick gloss: **the pass** = an integration branch in its
+own worktree; **the walk-in** = `main`; a **station** = one sub-agent working its own
+worktree/branch. Run service on these six moves:
 
 1. **Work the pass.** Cut and own ONE integration branch — *the pass* — in its own worktree,
    off your current working branch (**never `main`, the walk-in**). Every station agent gets

@@ -75,8 +75,10 @@ A dirty line kills service.
 - **Never run two heavy build/test jobs in one shared environment** — they contend and wedge.
   Have each agent build/test **serially** on its own bench.
 - **Cap concurrent build/test-heavy stations to what the host can bear** — size to
-  cores/memory/current load, not a fixed number; hold new fires until the line drains.
-  Read-only assessment/doc stations are throttle-safe (no build).
+  cores/memory/current load, not a fixed number; hold new fires until the line drains. A concrete
+  default: **build/test-heavy stations ≈ `min(cores − 2, 6)`**, and **halve it if the load
+  average is already high** (a 12-core box at load 60 runs ~1, not 5). Read-only assessment/doc
+  stations don't build — run those wider.
 - **A stalled full run with zero failures is a choked machine, not a hang.** If a single
   targeted test finishes fast while the whole suite stalls, it's the environment — clean up
   stale worktrees/processes/runtimes and re-run on **one pristine setup** before concluding
@@ -97,6 +99,41 @@ station.
   the hard way gets written on the wall, not re-burned next week.
 - **The human supplies the taste and the call; the brigade executes.** Surface choices with a
   crisp recommendation — don't make the call for them, but don't stall the line on a default.
+
+## Running it — the mechanism (Claude Code)
+
+The six moves are the *doctrine*; here's how they map to actual tool calls:
+
+- **The pass (integration worktree):** `git worktree add ../<proj>-pass <your-branch>` off the
+  branch you're on (**not `main`**), and work there.
+- **Fire a station:** spawn a sub-agent (the **Agent / Task tool**) with a **self-contained
+  prompt** — paths, root-cause hints, constraints, the deliverable. Give it its **own worktree**:
+  either set the subagent's `isolation: worktree` (auto-created, auto-cleaned) or
+  `git worktree add` one yourself and point the agent at it. Set the **model per task** via the
+  tool's model parameter (workhorse for routine, strongest for hard, cheapest for mechanical).
+- **The rail (task list):** track *fired / cooking / done* with the **TodoWrite** tool (or a
+  scratch `TASKS.md`), updated as stations land.
+- **Integrate a plate:** in the pass worktree, `git merge --no-ff <station-branch>`, then re-run
+  the build/tests on the combined tree.
+- **The window:** merge the pass into `main` **only when the human says**.
+
+## A worked example (3 stations)
+
+Goal: *"Add rate-limiting to the API — (1) a token-bucket middleware, (2) an admin config
+endpoint, (3) integration tests."*
+
+1. **Decompose by file.** Station **A** = `api/middleware/rate_limit.py`; **B** =
+   `api/routes/admin.py`; **C** = the tests. A and B touch disjoint files → fire in **parallel**.
+   C depends on A+B and shares test files → **serialize it after** they land.
+2. **Set up the pass:** `git worktree add ../api-pass feature/rate-limits`.
+3. **Fire A and B** — two sub-agents (workhorse model), each `isolation: worktree`, each a
+   self-contained order. Rail: `A cooking`, `B cooking`.
+4. **A lands** → `git merge --no-ff` A into the pass, re-test. Same for **B**.
+5. **Now fire C** (tests) against the combined pass tree. It lands → merge `--no-ff` + re-test.
+6. **Verify** the combined tree; show the human. They authorize → merge the pass → `main`.
+
+That's the whole loop: disjoint lanes in parallel, dependent work serialized, everything
+integrated and verified at the pass, `main` gated on the human.
 
 ## Good work to fire out
 Reviews (dimensions → find → adversarially verify), assessments (read-only research → sourced
