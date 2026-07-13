@@ -164,6 +164,10 @@ This tool modifies your environment, so it behaves like a disciplined engineer, 
 - **Meets you at your level.** It asks how comfortable you are and calibrates — plain language by
   default, jargon only where it helps. It leads with the short version and layers the detail on
   request, so what you get back is something you can actually absorb, not a wall of text.
+- **Helps you pick a stack if you're starting from scratch.** Arrived with just an idea and no
+  clue what to build it in? It asks what you're making and where it runs, then recommends a stack
+  with plain-language trade-offs and a clear default — so you leave with something you understand
+  and chose, not a guess.
 - **Understands multi-project workspaces.** If your tree holds several related projects — a
   backend + a web app + a mobile app, or a monorepo — it maps each one, offers to reorganize a
   tangled layout for clarity (proposed, never forced), and sets up context at *two* levels: each

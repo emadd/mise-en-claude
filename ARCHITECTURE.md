@@ -134,8 +134,10 @@ Interview ──► Assess ──► PLAN + CONSENT ──►  Execute phases (e
  new/exist
 ```
 
-- **Interview (`phases/00`)** — resolves: new vs existing project; stack; goals; the user's
-  experience level (tunes how much it explains); which optional phases they want.
+- **Interview (`phases/00`)** — resolves: new vs existing project; stack (and **guides stack
+  selection for a green user with no stack yet** — what/where it runs → recommend from `stacks/`
+  with plain trade-offs); goals; the user's experience level (tunes how much it explains); which
+  optional phases they want.
 - **Assess (`phases/01`)** — inspects the real environment: `git status`, existing `CLAUDE.md`
   / `README` / `.gitignore`, installed CLIs (`gh`, language toolchains), OS/arch, existing MCP
   config. Produces a *gap list*.

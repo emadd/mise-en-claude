@@ -199,8 +199,19 @@ Ask a compact set of questions (adapt to what you already learned; don't ask wha
 
 - **What are you building?** One or two sentences of vision. What inspired it?
 - **New or existing?** (You likely know — confirm.)
-- **Stack / platform**, if not obvious. If they're unsure, offer to recommend one and explain
-  the trade-offs.
+- **Stack / platform.** If it's obvious (existing code) or the user already knows, confirm it and
+  move on. **If they're unsure or starting from nothing, walk them through picking one — don't
+  make them already know the answer:**
+  - **What are you making, and where does it run?** In plain terms: a website, a phone app, a
+    desktop app, a command-line tool, a backend/API, or something cross-platform.
+  - **The constraints that actually decide it:** do they already know a language; do they have a
+    Mac (needed for iOS); solo or a team; ship-fast or learn-deeply.
+  - **Recommend from the stack catalog (`stacks/`) with a clear default + plain trade-offs** —
+    e.g. "for a beginner building a web app I'd start with X because Y; if you'd rather Z, here's
+    the cost." Map their answer to a stack module and **confirm before anything happens.**
+  Keep it a friendly conversation calibrated to their level (Prime Directive 6), not a quiz. The
+  goal: someone who arrived with just an idea leaves this step with a stack they *understand and
+  chose* — the scariest moment for a beginner, made the warmest.
 - **Goal for this session** — what does "ready to build" mean for them today?
 - **Experience level — never assume it.** Ask kindly (many are early: "Roughly how comfortable
   are you with git, the terminal, and this stack?"). When unknown or they seem unsure, default
