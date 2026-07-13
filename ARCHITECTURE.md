@@ -90,12 +90,12 @@ mise/
 │
 ├── stacks/                    # pluggable per-stack recommendation modules
 │   ├── _schema.md             # the contract every stack module fills
-│   ├── ios-swiftui.md         # iOS/iPadOS/macOS — fleshed-out reference stack
-│   ├── react.md               # STUB
-│   ├── nextjs.md              # STUB
-│   ├── angular.md             # STUB
-│   ├── flutter.md             # STUB
-│   ├── react-native.md        # STUB
+│   ├── ios-swiftui.md         # iOS/iPadOS/macOS — the reference stack
+│   ├── react.md               # React SPA (Vite/TS)
+│   ├── nextjs.md              # Next.js (App Router/TS)
+│   ├── angular.md             # Angular (TS)
+│   ├── flutter.md             # Flutter (Dart)
+│   ├── react-native.md        # React Native (Expo/bare)
 │   └── generic.md             # sane-default fallback
 │
 ├── templates/                 # source files the phases render from

@@ -5,9 +5,9 @@
 **Get your project's *mise en place* — everything in its place before you build.**
 
 > ⚠️ **Early draft.** The paste-in [`PROMPT.md`](./PROMPT.md) and the `/orchestrate` command work
-> today, and [`stacks/`](./stacks) is scaffolded (iOS/iPadOS/macOS fleshed out; other platforms
-> stubbed). The `Mode B` skill, `install.sh`, and templates described below are still roadmap
-> ([`ARCHITECTURE.md`](./ARCHITECTURE.md)). Feedback welcome.
+> today, and [`stacks/`](./stacks) covers iOS/iPadOS/macOS plus React, Next.js, Angular, Flutter,
+> and React Native. The `Mode B` skill, `install.sh`, and templates described below are still
+> roadmap ([`ARCHITECTURE.md`](./ARCHITECTURE.md)). Feedback welcome.
 
 `mise` is a paste-in prompt for [Claude Code](https://claude.com/claude-code) that interviews
 you about your project and then stands up (or upgrades) a real engineering foundation for it —
@@ -189,13 +189,16 @@ your project *is* the skill.
 Recommendations (structure, connectors, CLIs, `.gitignore`, skills) are driven by pluggable
 **stack modules** in [`stacks/`](./stacks):
 
-- `ios-swiftui` — **iOS / iPadOS / macOS, the fleshed-out reference stack.**
-- `react`, `nextjs`, `angular`, `flutter`, `react-native` — **stubs** (scaffolded; being fleshed out).
+- `ios-swiftui` — iOS / iPadOS / macOS (the reference stack).
+- `react` — React SPA (Vite / TypeScript).
+- `nextjs` — Next.js (App Router / TypeScript).
+- `angular` — Angular (TypeScript).
+- `flutter` — Flutter (Dart).
+- `react-native` — React Native (Expo or bare).
 - `generic` — a sane default when your stack isn't listed yet.
 
-The focus is iOS/iPadOS/macOS for now; the rest are stubs by design — flesh one out or add a new
-stack with a **single markdown module** ([Add a stack](./ARCHITECTURE.md#adding-a-stack)). PRs are
-the point.
+Don't see yours, or want to sharpen one? A stack is a **single markdown module**
+([Add a stack](./ARCHITECTURE.md#adding-a-stack)). PRs are the point.
 
 ---
 
