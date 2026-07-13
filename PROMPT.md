@@ -348,8 +348,11 @@ consent first; never run an install silently.
 
 Offer the workflow Skills and slash commands that match how they'll work, including
 **`/orchestrate`** (a multi-agent "kitchen brigade" workflow: a lead session fans work to
-isolated worktree agents and integrates their results). Install only what they want; explain
-what each does before installing.
+isolated worktree agents and integrates their results at *the pass*). It's a **real vendored
+command** — install it by copying `commands/orchestrate.md` into the project's (or the user's)
+`.claude/commands/`, and its extended playbook `WORKFLOW-ORCHESTRATION.md` alongside. (In a
+paste-only run without the repo files, fetch them from the mise repo first, or point the user to
+Mode B.) Install only what they want; explain what each does before installing.
 
 Include a **hand-off shortcut** (e.g. `/handoff`) that writes the current state — done, next,
 key decisions, files touched — to a durable artifact (issue or `HANDOFF.md`) so work survives a

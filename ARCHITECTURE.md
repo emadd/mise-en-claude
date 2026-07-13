@@ -94,10 +94,12 @@ mise/
 │   │   └── ...
 │   └── structure/             # per-stack starter directory skeletons
 │
-├── skills/                    # workflow Skills mise can install
-│   └── orchestrate/           # the kitchen-brigade /orchestrate skill (vendored or referenced)
-│
 ├── commands/                  # slash-command definitions mise can install
+│   └── orchestrate.md         # the kitchen-brigade /orchestrate command (vendored — built)
+│
+├── WORKFLOW-ORCHESTRATION.md   # the extended brigade playbook (companion to /orchestrate)
+│
+├── skills/                    # workflow Skills mise can install (future)
 │
 └── mcp/                       # per-stack recommended MCP connector configs (documented, not secrets)
 ```
@@ -284,8 +286,9 @@ couple of templates — **the extensibility story is the community story**, and 
 - **Name** — `mise` vs `seed` / `groundwork` / `install-prompt`.
 - **Skill vs prompt as the "real" artifact** — lead with the paste (broadest reach) or the
   installed skill (best ergonomics)? Current call: paste is canonical, skill is the power path.
-- **How much to vendor vs reference** — ship a copy of `/orchestrate` in `skills/`, or fetch it
-  from its source of truth? Vendoring is simpler for users; referencing avoids drift.
+- ~~**How much to vendor vs reference** — ship a copy of `/orchestrate`, or fetch it?~~
+  **RESOLVED: vendored** as `commands/orchestrate.md` + `WORKFLOW-ORCHESTRATION.md` (a
+  self-contained slash command + its extended playbook). Simpler for users; no external fetch.
 - **Telemetry** — none, presumably (on-brand for a privacy-minded tool). Growth is measured by
   stars/forks, not by phoning home.
 - **Guardrails on install** — how hard to gate genuinely destructive suggestions (e.g. force
