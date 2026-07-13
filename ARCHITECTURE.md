@@ -96,6 +96,9 @@ mise/
 │   ├── angular.md             # Angular (TS)
 │   ├── flutter.md             # Flutter (Dart)
 │   ├── react-native.md        # React Native (Expo/bare)
+│   ├── node-express.md        # Node.js + Express API (TS)
+│   ├── python-fastapi.md      # FastAPI (async Python)
+│   ├── python-django.md       # Django (full-stack)
 │   └── generic.md             # sane-default fallback
 │
 ├── templates/                 # source files the phases render from

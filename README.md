@@ -189,12 +189,19 @@ your project *is* the skill.
 Recommendations (structure, connectors, CLIs, `.gitignore`, skills) are driven by pluggable
 **stack modules** in [`stacks/`](./stacks):
 
+**Frontend & mobile:**
 - `ios-swiftui` — iOS / iPadOS / macOS (the reference stack).
 - `react` — React SPA (Vite / TypeScript).
 - `nextjs` — Next.js (App Router / TypeScript).
 - `angular` — Angular (TypeScript).
 - `flutter` — Flutter (Dart).
 - `react-native` — React Native (Expo or bare).
+
+**Backend:**
+- `node-express` — Node.js + Express API (TypeScript).
+- `python-fastapi` — FastAPI (async Python API).
+- `python-django` — Django (batteries-included full-stack).
+
 - `generic` — a sane default when your stack isn't listed yet.
 
 Don't see yours, or want to sharpen one? A stack is a **single markdown module**
