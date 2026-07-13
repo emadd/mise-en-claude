@@ -391,7 +391,9 @@ isolated worktree agents and integrates their results at *the pass*). It's a **r
 command** — install it by copying `commands/orchestrate.md` into the project's (or the user's)
 `.claude/commands/`, and its extended playbook `WORKFLOW-ORCHESTRATION.md` alongside. (In a
 paste-only run without the repo files, fetch them from the mise repo first, or point the user to
-Mode B.) Install only what they want; explain what each does before installing.
+Mode B.) Install only what they want; explain what each does before installing. **Mention that the
+kitchen-brigade metaphor is the default flavor, not a requirement** — the user can run it plain or
+re-skin it (submarine, starship, whatever); the mechanics are what matter, the costume is theirs.
 
 Include a **hand-off shortcut** (e.g. `/handoff`) that writes the current state — done, next,
 key decisions, files touched — to a durable artifact (issue or `HANDOFF.md`) so work survives a

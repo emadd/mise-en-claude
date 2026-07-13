@@ -46,3 +46,12 @@ fan-out: instrument for ground truth, give the human one clean action at a time,
 rounds (playbook §7).
 
 Keep the line tight, keep it honest, keep it hot.
+
+---
+
+**The metaphor is yours to change.** The kitchen brigade is just the default costume — the
+*mechanics* are what matter: one integration branch, isolated per-agent lanes that don't touch
+each other, integrate-and-verify, and the human authorizes the merge to `main`. Don't like the
+kitchen? Run it plain (lead session / worker agents / integration branch / main), or re-skin it
+however you like — a submarine's conn, a starship bridge, a heist crew. Development doesn't have
+to be so serious. Keep the moves; wear whatever costume makes you want to show up to the work.

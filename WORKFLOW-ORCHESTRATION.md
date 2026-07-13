@@ -11,6 +11,19 @@ The reproducible core is six moves (§1–6). §7 adds the *tight interactive lo
 can't be handed to a station (live hardware, credentials, manual/on-device checks), and §8 is
 the ethos underneath both.
 
+## Make it yours — the metaphor is optional
+
+The kitchen brigade is the **default flavor, not a requirement.** What's load-bearing is the
+*mechanics*: one integration branch (the pass), isolated per-agent lanes that never touch each
+other, integrate-and-verify, and the human authorizes the merge to `main`. The costume is yours:
+
+- **Dry it out** — plain terms: lead session / worker agents / integration branch / `main`.
+- **Re-skin it** — a submarine's conn, a starship bridge, a heist crew, whatever you like.
+
+Keep the moves; wear whatever makes you want to show up to the work. The roster and slang below
+are the *kitchen* version — read them as one option, not gospel. Development doesn't have to be
+so serious.
+
 ## The brigade — who's who
 | Role | Who | Owns |
 |---|---|---|
