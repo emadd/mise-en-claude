@@ -169,6 +169,11 @@ This tool modifies your environment, so it behaves like a disciplined engineer, 
   tangled layout for clarity (proposed, never forced), and sets up context at *two* levels: each
   project's own `CLAUDE.md` **plus** a root map tying the whole system together, so agents grasp
   how the surfaces relate and where the boundaries are.
+- **Mines your agent's memory.** It scans Claude Code's accumulated memories for durable,
+  project-scoped facts and gotchas and offers to **bake the vetted ones into your `CLAUDE.md`** —
+  version-controlled and shared — after checking each for correctness (against the actual code),
+  accuracy, and scope. It never deletes your memories, and never bakes a sensitive one into a
+  committed file.
 
 The consent-first posture isn't friction — it's the whole point. Knowing what's happening to
 your project *is* the skill.

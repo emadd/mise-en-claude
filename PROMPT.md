@@ -362,6 +362,21 @@ Rescue: append to an existing `.gitignore`, never replace it.
   — never clobber. Include a short **Context hygiene** section encoding the context-budget
   contract (per the Guiding principle): warn when the window gets tight, hand off to a durable
   artifact, keep tasks small enough to finish in one window, don't run into auto-compaction.
+- **Mine the agent's memories — but vet before you bake.** Claude Code accumulates memories
+  (user preferences, project facts, hard-won gotchas, rules the user has given). Scan the memory
+  store for anything touching *this* project or stack, and **triage each entry**:
+  - **Bake it in** — a durable, project-scoped fact/rule/gotcha (an architecture decision, an
+    "always do X here", a known trap) belongs in the project's `CLAUDE.md`, where it's
+    version-controlled and shared with every session and collaborator instead of stranded on one
+    machine.
+  - **Evaluate first** — memories go stale, drift, or over-generalize. Before baking one in,
+    check **correctness** (still true? *verify against the actual code* — a memory naming a file
+    or flag that no longer exists is stale), **accuracy** (precise, or a vague hunch?), and
+    **scope** (project-wide → project `CLAUDE.md`; user-wide → leave it in user memory / global
+    config; one-off → don't bake it). **Propose, don't silently rewrite `CLAUDE.md`; never delete
+    the user's memories** — flag stale ones for *them* to prune.
+  - **Don't leak.** A memory may hold personal or sensitive detail; never bake that into a
+    committed (possibly public) `CLAUDE.md` — same by-reference discipline as secrets.
 - **`README.md`** — what it is, how to run it, how to contribute. Seed or improve.
 - **Structure** — propose (don't force) a sane directory layout for the stack. Rescue: propose
   splits/moves as reviewable diffs using `git mv` so history is preserved. Never big-bang.

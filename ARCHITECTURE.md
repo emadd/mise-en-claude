@@ -60,6 +60,10 @@ How the Install Prompt is built.
     levels** — each project's own `CLAUDE.md` **plus a root workspace map** capturing how the
     surfaces relate. The root map is the highest-value artifact for multi-surface products.
     (Detected in Phase 0; handled in Phase W.)
+14. **Memory mining.** Promote durable, project-scoped truth from the agent's accumulated memories
+    into the version-controlled `CLAUDE.md` — but vet each entry for correctness (verify against
+    the code), accuracy, and scope first. Propose, never auto-rewrite; never delete the user's
+    memories; never bake sensitive memory content into a committed file. (Phase 4.)
 
 ---
 
