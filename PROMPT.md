@@ -365,10 +365,13 @@ Rescue: append to an existing `.gitignore`, never replace it.
 - **Mine the agent's memories — but vet before you bake.** Claude Code accumulates memories
   (user preferences, project facts, hard-won gotchas, rules the user has given). Scan the memory
   store for anything touching *this* project or stack, and **triage each entry**:
-  - **Bake it in** — a durable, project-scoped fact/rule/gotcha (an architecture decision, an
-    "always do X here", a known trap) belongs in the project's `CLAUDE.md`, where it's
-    version-controlled and shared with every session and collaborator instead of stranded on one
-    machine.
+  - **Bake it in — but grep the existing `CLAUDE.md` first.** A durable, project-scoped
+    fact/rule/gotcha (an architecture decision, an "always do X here", a known trap) belongs in
+    the project's `CLAUDE.md`, version-controlled and shared instead of stranded on one machine.
+    **Before appending any memory, search the current `CLAUDE.md` for it — if it's already
+    documented, skip it.** A mature project's brain likely already covers most of this; appending
+    duplicates just bloats the file. The honest net addition is usually small — that's a success,
+    not a shortfall.
   - **Evaluate first** — memories go stale, drift, or over-generalize. Before baking one in,
     check **correctness** (still true? *verify against the actual code* — a memory naming a file
     or flag that no longer exists is stale), **accuracy** (precise, or a vague hunch?), and
