@@ -107,8 +107,15 @@ defenses, use both:
   station's branch has **new commits** (`git -C <worktree> log --oneline <base>..HEAD`), the
   **deliverable file exists**, and the build/tests actually ran. A call-back with **no commits and
   no artifacts** — especially one that says it "delegated" or "will report back" — is the
-  delegation loop: **86 it and re-fire with the no-sub-agents rule.** Never plate a station you
-  didn't verify actually cooked.
+  delegation loop. Never plate a station you didn't verify actually cooked.
+- **Detect and kill a runaway correctly — then re-fire.** Don't infer "nothing's running" from
+  process/build signatures: **a looping agent runs no build — it just spins on reads/thinking**,
+  so "no build process" is *not* proof it's idle. Check the **actual running-agents list.** When
+  you find a loop, **kill the whole lineage** — a "completed" parent can **orphan a still-running
+  descendant that won't appear in your task list**; hunt it down by agent id and stop it. And
+  **never re-fire into a worktree until you've confirmed it's quiescent** (no live or orphaned
+  agent still in it) — two agents in one worktree clobber each other and burn quota. Only once the
+  lineage is dead and the tree is quiet do you re-fire with the no-sub-agents rule.
 
 ## 6. The human calls it; write it down
 - Decisions → `docs/`, committed as you make them.

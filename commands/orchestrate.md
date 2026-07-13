@@ -36,8 +36,11 @@ worktree/branch. Run service on these six moves:
    delegates); and (b) on call-back, **verify ground truth before you trust it** — the branch has
    new commits, the deliverable file exists, the build/tests actually ran. A call-back with **no
    commits and no artifacts** — especially "I launched it, will report back" — is a cook that
-   re-delegated instead of cooking: **86 it and re-fire with the no-sub-agents rule.** Only then
-   merge `--no-ff` to the pass and re-verify the combined tree.
+   re-delegated instead of cooking. **86 the *whole lineage* first** — a "completed" parent can
+   orphan a live descendant that won't show in your task list, and a looping agent runs no build,
+   so check the **actual running-agents list**, not process signatures — confirm the worktree is
+   quiescent, *then* re-fire with the no-sub-agents rule. Only then merge `--no-ff` to the pass and
+   re-verify the combined tree.
 6. **The human calls it; write it down.** Decisions → `docs/`; hard-won gotchas → durable
    notes/memory, so the next run inherits them. Surface choices with a crisp recommendation —
    the human supplies the call, the brigade executes. The window (a merge to `main`) opens only
