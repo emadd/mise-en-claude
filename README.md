@@ -157,6 +157,11 @@ This tool modifies your environment, so it behaves like a disciplined engineer, 
 - **Meets you at your level.** It asks how comfortable you are and calibrates — plain language by
   default, jargon only where it helps. It leads with the short version and layers the detail on
   request, so what you get back is something you can actually absorb, not a wall of text.
+- **Understands multi-project workspaces.** If your tree holds several related projects — a
+  backend + a web app + a mobile app, or a monorepo — it maps each one, offers to reorganize a
+  tangled layout for clarity (proposed, never forced), and sets up context at *two* levels: each
+  project's own `CLAUDE.md` **plus** a root map tying the whole system together, so agents grasp
+  how the surfaces relate and where the boundaries are.
 
 The consent-first posture isn't friction — it's the whole point. Knowing what's happening to
 your project *is* the skill.

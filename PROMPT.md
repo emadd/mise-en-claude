@@ -166,6 +166,12 @@ Useful, read-only commands:
   a `.env` or obvious secrets, unusually large files, one-giant-file structures
 - Detect the **stack** from manifests/extensions (e.g. `*.xcodeproj`/`Package.swift` → Swift;
   `package.json` → Node/TS; `pyproject.toml` → Python; etc.)
+- **Single project, or a multi-project workspace?** Look for *several distinct project roots* in
+  the tree — multiple manifests/stacks in different subdirs (a `server/` + `web/` + `app/`;
+  monorepo dirs like `apps/`, `services/`, `packages/`; multiple `package.json` / `pyproject.toml`
+  / `*.xcodeproj` / `go.mod` at different depths). A product is often several related surfaces
+  (backend + web + mobile + shared libs) in one tree — treat that as a **workspace of related
+  projects**, not one project (see Phase W).
 
 Then tell the user, in a sentence: which mode you're in, what stack you detected, what you
 found, **and the exact path you'd operate on** — the *resolved project root*, which may be a
@@ -253,6 +259,39 @@ rescue flow (you already know the project — don't re-interview from scratch):
    customized on purpose, **ask "keep yours or adopt the new guidance?"** — never silently
    overwrite a deliberate choice.
 6. Continue to **Phase 9** (verify + **re-stamp** to the new version).
+
+---
+
+### Phase W — Multi-project workspace (when the tree holds several related projects)
+
+Many real products are *several related projects in one place* — a backend/server, a web
+frontend, a mobile app, shared packages/infra. When Phase 0 detects that shape (whether new or
+existing), adapt:
+
+1. **Map the tenants.** For each distinct project root, note its **path, stack, and role**
+   (backend / web / mobile / shared library / infra). Confirm with the user that these are **one
+   product** (related surfaces), not unrelated repos that happen to share a folder — the plan is
+   very different if they're unrelated.
+2. **Judge the organization; suggest a reorg *for context*.** If the surfaces are tangled —
+   mixed concerns at the root, no clear per-project boundary, a frontend and a server sharing one
+   undifferentiated folder — **propose a clean workspace layout** (`apps/`, `services/`,
+   `packages/`, or `server|web|mobile/`) so each project is a self-contained lane. That
+   separation is what lets an agent reason about one surface without dragging in the others.
+   Propose it as reviewable `git mv` moves; **never force a restructure.** If it's already clean,
+   say so and leave it.
+3. **Foundations at *two* levels — this is the key.** Give **each tenant its own foundation**
+   (per-project `CLAUDE.md`, structure, `.gitignore`, stack-appropriate recommendations) **and**
+   a **root-level workspace map** — a root `CLAUDE.md` that names each project, what it does, how
+   they relate (who calls whom, shared contracts/types/schemas), and links to each project's own
+   `CLAUDE.md`. The root map is what lets an agent understand the *whole system and the
+   boundaries* — the single most valuable artifact for multi-project work.
+4. **Decide the git topology with the user.** One repo at the workspace root (monorepo), or
+   separate repos / submodules? Detect what already exists; recommend, don't impose. Snapshot /
+   rescue rules apply per the detected layout.
+
+Then run the normal phases **per tenant** (each may be a different stack), coordinated by the
+root map. This composes with everything else — a workspace can be greenfield, a rescue, or an
+update; each tenant is handled in its own right, under one root context.
 
 ---
 

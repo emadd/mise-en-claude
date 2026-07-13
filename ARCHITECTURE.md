@@ -54,6 +54,12 @@ How the Install Prompt is built.
     request; never dump a wall of jargon (a failure even for experts). Cognitive load is a
     first-class UX concern, not an afterthought. (Prime Directive 6; interview calibration in
     Phase 1; layered health report in Phase 2.)
+13. **Multi-project awareness.** Detect when the tree is a *workspace of related projects*
+    (backend / web / mobile / shared), not one project. Map the tenants, suggest a reorg for
+    context when the layout is tangled (propose, never force), and lay foundations at **two
+    levels** — each project's own `CLAUDE.md` **plus a root workspace map** capturing how the
+    surfaces relate. The root map is the highest-value artifact for multi-surface products.
+    (Detected in Phase 0; handled in Phase W.)
 
 ---
 
