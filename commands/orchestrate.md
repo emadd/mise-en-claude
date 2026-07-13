@@ -30,8 +30,14 @@ worktree/branch. Run service on these six moves:
    on one pristine setup before blaming the code. Every station cleans up its scratch resources
    on exit; sweep the line before each verify and at close.
 5. **Fire → verify → integrate.** Give each agent a self-contained order — paths, root-cause
-   hints, constraints, the deliverable — because its call-back is the only thing that comes off
-   the station. On call-back: merge `--no-ff` to the pass and re-verify the combined tree.
+   hints, constraints, the deliverable. **Two hard rules that stop a delegation loop:**
+   (a) the order must say *"do this **yourself** — do NOT spawn sub-agents; if it's too big to
+   finish here, stop and hand it back, don't fan it out"* (a cook cooks; only the Sous-Chef
+   delegates); and (b) on call-back, **verify ground truth before you trust it** — the branch has
+   new commits, the deliverable file exists, the build/tests actually ran. A call-back with **no
+   commits and no artifacts** — especially "I launched it, will report back" — is a cook that
+   re-delegated instead of cooking: **86 it and re-fire with the no-sub-agents rule.** Only then
+   merge `--no-ff` to the pass and re-verify the combined tree.
 6. **The human calls it; write it down.** Decisions → `docs/`; hard-won gotchas → durable
    notes/memory, so the next run inherits them. Surface choices with a crisp recommendation —
    the human supplies the call, the brigade executes. The window (a merge to `main`) opens only

@@ -94,6 +94,22 @@ re-verifies** the combined tree. Give each agent a self-contained fire order —
 hints, constraints, the deliverable — because the call-back is the only thing that comes off the
 station.
 
+**⚠️ Guard against the delegation loop — cooks cook, they don't re-delegate.** A station cook does
+the work with *its own hands* (edits files, runs commands, commits on its branch). It must **not
+spawn sub-agents or fan the task out further** — nesting is one level: the Sous-Chef delegates, a
+cook executes. A cook that re-delegates produces a **delegation loop** — each agent reports "I
+launched it, will report back" and *nobody actually cooks*, so the branch stays empty. Two
+defenses, use both:
+
+- **In every fire order, a hard rule:** *"Do this **yourself**. Do **not** spawn sub-agents. If
+  it's too big to finish here, stop and hand it back — don't fan it out."*
+- **Verify ground truth before you trust a call-back.** "Done" is a claim, not a fact. Confirm the
+  station's branch has **new commits** (`git -C <worktree> log --oneline <base>..HEAD`), the
+  **deliverable file exists**, and the build/tests actually ran. A call-back with **no commits and
+  no artifacts** — especially one that says it "delegated" or "will report back" — is the
+  delegation loop: **86 it and re-fire with the no-sub-agents rule.** Never plate a station you
+  didn't verify actually cooked.
+
 ## 6. The human calls it; write it down
 - Decisions → `docs/`, committed as you make them.
 - Hard-won gotchas → durable notes / memory, so the next service inherits them. A recipe learned
@@ -108,7 +124,9 @@ The six moves are the *doctrine*; here's how they map to actual tool calls:
 - **The pass (integration worktree):** `git worktree add ../<proj>-pass <your-branch>` off the
   branch you're on (**not `main`**), and work there.
 - **Fire a station:** spawn a sub-agent (the **Agent / Task tool**) with a **self-contained
-  prompt** — paths, root-cause hints, constraints, the deliverable. Give it its **own worktree**:
+  prompt** — paths, root-cause hints, constraints, the deliverable, **and the hard "do this
+  yourself, do NOT spawn sub-agents" rule** (the §5 delegation-loop guard). Give it its **own
+  worktree**:
   either set the subagent's `isolation: worktree` (auto-created, auto-cleaned) or
   `git worktree add` one yourself and point the agent at it. Set the **model per task** via the
   tool's model parameter — *workhorse / strongest / cheapest* are **roles, not literal values**;
