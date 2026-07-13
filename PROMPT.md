@@ -1,10 +1,12 @@
 <!--
 mise — the Install Prompt.
 
-HOW TO USE (Mode A, zero-install):
-  1. Open a terminal IN your project folder (new or existing).
-  2. Run:  claude
-  3. Copy EVERYTHING below the line and paste it as your first message.
+HOW TO USE (Mode A, zero-install) — works in ANY Claude Code surface (CLI, Desktop app, web, IDE):
+  1. Start a Claude Code session for your project (new or existing):
+       - CLI: open a terminal in the folder and run `claude`
+       - Desktop app: open Claude Code and open/select your project folder
+       - Web / IDE: open the project in claude.ai/code or your IDE extension
+  2. Copy EVERYTHING below the line and paste it as your first message.
 
 This first draft is intentionally self-contained (one file, no @-imports) so it can be
 pasted and tested directly against real projects. The modular phases/ + stacks/ split in
@@ -143,6 +145,12 @@ then adapt.
 
 Work through these in order. Announce each phase, do the work with consent, verify, move on.
 The user may skip any phase.
+
+**Don't assume the user is at a terminal.** Claude Code runs on the CLI, the Desktop app, the web,
+and IDE extensions. *You* run shell/git/tools yourself regardless of surface — so assume a terminal
+only for **your own** tool calls, never for the **human**. When you need the *user* to do something
+manual (rotate a key, run a first command, open a dashboard), give steps that fit their surface
+rather than assuming a shell prompt.
 
 ---
 

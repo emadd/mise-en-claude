@@ -20,8 +20,9 @@ It's the foundation a seasoned engineer would lay before writing a line of featu
 
 > **Honest scope:** the *ideas* here — project structure, git discipline, programmatic access,
 > context hygiene — are tool-agnostic craft. **This repo is the concrete Claude Code reference
-> implementation:** it installs Skills, slash commands, and MCP connectors, so it assumes Claude
-> Code. The ideas port anywhere; the automation is Claude Code-flavored on purpose.
+> implementation:** it installs Skills, slash commands, and MCP connectors, so it assumes **Claude
+> Code (any surface — CLI, Desktop app, web, or IDE extension)**. The ideas port anywhere; the
+> automation is Claude Code-flavored on purpose.
 
 ---
 
@@ -29,9 +30,14 @@ It's the foundation a seasoned engineer would lay before writing a line of featu
 
 ### Mode A — zero install (fastest)
 
-1. Open a terminal in your project folder (new *or* existing).
-2. Start Claude Code: `claude`
-3. Copy the contents of **[`PROMPT.md`](./PROMPT.md)** and paste it as your first message.
+Works in **any Claude Code surface** — the CLI, the Desktop app, the web (claude.ai/code), or an
+IDE extension.
+
+1. Start a Claude Code session **for your project** (new *or* existing):
+   - **CLI:** open a terminal in the project folder and run `claude`.
+   - **Desktop app:** open Claude Code and open/select your project folder.
+   - **Web / IDE:** open your project in claude.ai/code or your IDE extension.
+2. Copy the contents of **[`PROMPT.md`](./PROMPT.md)** and paste it as your first message.
 
 That's it. `mise` will interview you, show you a plan, and set nothing up until you say yes.
 

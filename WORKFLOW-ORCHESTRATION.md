@@ -77,8 +77,9 @@ A dirty line kills service.
 - **Cap concurrent build/test-heavy stations to what the host can bear** — size to
   cores/memory/current load, not a fixed number; hold new fires until the line drains. A concrete
   default: **build/test-heavy stations ≈ `min(cores − 2, 6)`**, and **halve it if the load
-  average is already high** (a 12-core box at load 60 runs ~1, not 5). Read-only assessment/doc
-  stations don't build — run those wider.
+  average is already high** (a 12-core box at load 60 runs ~1, not 5). Read the host with
+  `nproc` (Linux) / `sysctl -n hw.ncpu` (macOS) for cores and `uptime` for the load average.
+  Read-only assessment/doc stations don't build — run those wider.
 - **A stalled full run with zero failures is a choked machine, not a hang.** If a single
   targeted test finishes fast while the whole suite stalls, it's the environment — clean up
   stale worktrees/processes/runtimes and re-run on **one pristine setup** before concluding
@@ -110,12 +111,18 @@ The six moves are the *doctrine*; here's how they map to actual tool calls:
   prompt** — paths, root-cause hints, constraints, the deliverable. Give it its **own worktree**:
   either set the subagent's `isolation: worktree` (auto-created, auto-cleaned) or
   `git worktree add` one yourself and point the agent at it. Set the **model per task** via the
-  tool's model parameter (workhorse for routine, strongest for hard, cheapest for mechanical).
+  tool's model parameter — *workhorse / strongest / cheapest* are **roles, not literal values**;
+  use whatever tier names your tool actually exposes (routine → workhorse, hard/risky → strongest,
+  mechanical → cheapest).
 - **The rail (task list):** track *fired / cooking / done* with the **TodoWrite** tool (or a
   scratch `TASKS.md`), updated as stations land.
 - **Integrate a plate:** in the pass worktree, `git merge --no-ff <station-branch>`, then re-run
   the build/tests on the combined tree.
 - **The window:** merge the pass into `main` **only when the human says**.
+
+*Surface-agnostic:* this works on any Claude Code surface — CLI, Desktop app, web, IDE. You run
+the git/tool calls yourself regardless; the Desktop app in particular manages multiple worktree
+sessions visually, which suits running the line.
 
 ## A worked example (3 stations)
 
