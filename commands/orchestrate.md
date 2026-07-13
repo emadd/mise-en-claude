@@ -34,7 +34,9 @@ worktree/branch. Run service on these six moves:
    (a) the order must say *"do this **yourself** — do NOT spawn sub-agents; if it's too big to
    finish here, stop and hand it back, don't fan it out"* (a cook cooks; only the Sous-Chef
    delegates); and (b) on call-back, **verify ground truth before you trust it** — the branch has
-   new commits, the deliverable file exists, the build/tests actually ran. A call-back with **no
+   new commits, the deliverable file exists, the build/tests actually ran. **A green build is not
+   proof it works** — after a collision especially, verify the actual behavior (run it and look, or
+   a test that exercises the feature), not just that it compiled. A call-back with **no
    commits and no artifacts** — especially "I launched it, will report back" — is a cook that
    re-delegated instead of cooking. **86 the *whole lineage* first** — a "completed" parent can
    orphan a live descendant that won't show in your task list, and a looping agent runs no build,

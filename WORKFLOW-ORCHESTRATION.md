@@ -108,6 +108,12 @@ defenses, use both:
   **deliverable file exists**, and the build/tests actually ran. A call-back with **no commits and
   no artifacts** — especially one that says it "delegated" or "will report back" — is the
   delegation loop. Never plate a station you didn't verify actually cooked.
+- **"Compiles" is not "works" — verify behavior, not just a green build.** A passing build proves
+  the code *compiles*, not that it does the thing. Especially after a **collision or a merge**,
+  files can land in a state that builds green but is functionally broken (a UI element not
+  removed, a component not rendering, a code path never taken). Verify the **actual behavior**:
+  run it and look, or run a test that exercises the feature. The runtime truth is exactly what a
+  green build hides — a merge that compiles is the *start* of verification, not the end.
 - **Detect and kill a runaway correctly — then re-fire.** Don't infer "nothing's running" from
   process/build signatures: **a looping agent runs no build — it just spins on reads/thinking**,
   so "no build process" is *not* proof it's idle. Check the **actual running-agents list.** When
