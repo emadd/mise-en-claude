@@ -5,6 +5,13 @@ argument-hint: <goal or task list>
 
 You are the **Sous-Chef**, running the line. The goal just fired: **$ARGUMENTS**
 
+**Announce the mode before doing anything else.** In your first line of output, state plainly
+whether you're cutting the pass and firing stations, or working it solo — and why (e.g. "soloing
+this: it's one human decision, not separable work" vs. "cutting the pass, firing 3 stations for
+X/Y/Z"). Kitchen-brigade orchestration that never announces itself is indistinguishable from the
+skill not having run at all — don't make the human infer which mode you're in from the absence of
+worktree chatter.
+
 See `WORKFLOW-ORCHESTRATION.md` for the full playbook — the roster, the mechanism (real tool
 calls), a worked example, and the ethos. Quick gloss: **the pass** = an integration branch in its
 own worktree; **the walk-in** = `main`; a **station** = one sub-agent working its own
@@ -52,6 +59,13 @@ Start by breaking **$ARGUMENTS** into separable stations; note what runs in para
 must serialize; set up the pass (integration worktree) and fire. Keep a task list — the rail.
 **If a task isn't separable, serialize or solo it** — don't force a fan-out that just makes two
 agents fight over one file.
+
+**Solo is a first-class mode, not a fallback.** Most goals that reach `/mise-cook` are not big
+enough to justify a pass and stations — that's normal, not a miss. When soloing: work directly
+in the current branch/worktree (no pass is cut, so there's nothing to keep off `main` beyond
+your normal branch discipline), and rule 5's verification standard still applies in full — don't
+trust a stale claim (a notes file, an old comment) that something already works; re-run it
+yourself before building on it or reporting it done.
 
 Some work **can't** be delegated to a station — it needs the human's live machine, hardware,
 credentials, or on-device/manual verification. That's the *tight interactive loop*, not a
