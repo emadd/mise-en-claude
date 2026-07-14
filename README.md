@@ -44,6 +44,15 @@ IDE extension.
 
 That's it. `mise` will interview you, show you a plan, and set nothing up until you say yes.
 
+**Don't have the file handy — just this link?** Paste this instead of the full file:
+
+```
+Read https://raw.githubusercontent.com/emadd/mise/main/PROMPT.md and follow it to set up my project.
+```
+
+That's a real instruction to fetch and run it — not the same as just dropping the bare link, which
+Claude will (correctly, for safety) treat as something to look at rather than something to obey.
+
 ### Mode B: clone + install (the workflow commands)
 
 Clone the repo and run the installer to put mise's **workflow commands** into your Claude Code
