@@ -107,7 +107,7 @@ untrusted instructions" line it draws for users; the contribution flow has to *h
 
 Not two concerns — **three**, currently tangled:
 - **Stack setup guidance** (`stacks/`): *what* to set up per technology. Stack-specific.
-- **Kitchen guidance, generic** (stack-agnostic): *how* to work — the `/orchestrate` brigade
+- **Kitchen guidance, generic** (stack-agnostic): *how* to work — the `/mise-cook` brigade
   playbook. Applies everywhere.
 - **Kitchen guidance, per-stack** (stack-specific *workflow*): how to run the workflow on a
   particular stack. **iOS simulator hygiene when running the brigade on Xcode is the canonical
@@ -118,7 +118,7 @@ per-stack addenda.
 
 **Proposed structure:**
 - `stacks/` — per-stack *setup* (unchanged).
-- `workflow/` — the generic kitchen brigade (the `/orchestrate` command + `WORKFLOW-ORCHESTRATION.md`).
+- `workflow/` — the generic kitchen brigade (the `/mise-cook` command + `WORKFLOW-ORCHESTRATION.md`).
 - **Per-stack kitchen notes attach to their stack** — either an "Orchestration notes" section
   inside the stack module, or a sibling file next to it. Decide the mechanism when we build it.
 - `PROMPT.md` stays the entry point.
@@ -133,7 +133,7 @@ per-stack addenda.
 
 ## 3. A home for the iOS simulator lessons
 
-When `/orchestrate` was genericized, the iOS-specific hygiene lessons (simulator daemon leaks, the
+When `/mise-cook` was genericized, the iOS-specific hygiene lessons (simulator daemon leaks, the
 process-table ceiling, "a green suite that crawls is a choked machine not a hang," one-sim-per-cook)
 were correctly stripped from the *generic* playbook. They never landed anywhere.
 
@@ -159,7 +159,7 @@ mise's guidance should:
   (Exactly the cadence we adopted for mise.)
 - **Establish a safety net as a foundation.** Tests + CI so verification is repeatable, not a one-off
   manual check. A project should have *some* way to prove it works before it ships.
-- **Teach the loop:** change → verify → review → merge. The same discipline `/orchestrate` already
+- **Teach the loop:** change → verify → review → merge. The same discipline `/mise-cook` already
   carries ("taste before the pass"), extended from multi-agent runs to the user's everyday workflow.
 
 **Open question — how prescriptive?** A solo beginner shouldn't be forced into heavyweight process,

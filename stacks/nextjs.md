@@ -16,7 +16,7 @@
   worth wiring programmatically; an auth provider if used. Config-as-code beats their dashboards.
 - **cli_tools:** `gh`; the package manager (from the lockfile); the `next` CLI; `vercel` CLI if
   deployed there; the ORM CLI (`prisma` / `drizzle-kit`) if used; `eslint`.
-- **skills:** `/orchestrate`, `/handoff`.
+- **skills:** `/mise-cook`, `/mise-handoff`.
 - **claude_md_notes:** App vs Pages Router; the server/client component boundary and *when* to
   `'use client'`; the data-fetching model (server components / route handlers / server actions);
   env handling (`NEXT_PUBLIC_` = public, secrets server-only); the DB/ORM; the rendering strategy

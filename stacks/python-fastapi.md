@@ -13,7 +13,7 @@
   migrations; wire the `alembic` and `psql` CLIs. Plus external APIs and a deploy target.
 - **cli_tools:** `gh`; **`uv`** (or pip/poetry — detect from the lockfile); `uvicorn` (dev
   server); **`alembic`** (migrations); `psql`; `ruff` (lint + format); `pytest`; `mypy`.
-- **skills:** `/orchestrate`, `/handoff`.
+- **skills:** `/mise-cook`, `/mise-handoff`.
 - **claude_md_notes:** the **async model** (`async def` endpoints + an async DB driver — don't
   block the event loop with sync I/O); Pydantic schemas vs ORM models kept separate; the
   **Alembic migration workflow** (autogenerate then *review*; never hand-edit a shipped

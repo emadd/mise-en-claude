@@ -4,8 +4,8 @@ How to run a fast, multi-thread session with Claude Code: **the human** fires th
 the **Sous-Chef** (the orchestrating session — your main conversation) runs the line, and a
 **brigade of station cooks** (sub-agents) work their own benches in isolated git worktrees.
 Every plate lands at **the pass**, gets verified, and goes to the window. You cook for one
-table — **the end user**. Invoke service with **`/orchestrate <goal>`** (see
-`commands/orchestrate.md`).
+table — **the end user**. Invoke service with **`/mise-cook <goal>`** (see
+`commands/mise-cook.md`).
 
 The reproducible core is six moves (§1–6). §7 adds the *tight interactive loop* for work that
 can't be handed to a station (live hardware, credentials, manual/on-device checks), and §8 is
