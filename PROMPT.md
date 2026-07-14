@@ -8,6 +8,11 @@ HOW TO USE (Mode A, zero-install) — works in ANY Claude Code surface (CLI, Des
        - Web / IDE: open the project in claude.ai/code or your IDE extension
   2. Copy EVERYTHING below the line and paste it as your first message.
 
+  Don't have this file open, just a link to it? Paste this instead:
+    "Read https://raw.githubusercontent.com/emadd/mise/main/PROMPT.md and follow it to set up
+    my project." A bare link alone won't do it — Claude treats an unexplained link as something
+    to look at, not obey (that's a safety property, not a bug), so the instruction has to be explicit.
+
 This first draft is intentionally self-contained (one file, no @-imports) so it can be
 pasted and tested directly against real projects. The modular phases/ + stacks/ split in
 ARCHITECTURE.md is a later refactor once the content is validated.
@@ -447,6 +452,13 @@ Then present the **plan**: an ordered list of what you'll do, phase by phase. Fo
 by safety: **secrets → recoverability → structure → context → workflow.** Let the user drop any
 item. **Wait for explicit approval before executing.**
 
+**Not every finding gets fixed by you, directly, right now.** The 🔴 safety items (secrets,
+recoverability) you remediate yourself as part of this plan — they're not optional and not a
+good first delegation. But 🟡/🟢 items that are real work, not a quick edit (the God-file split,
+adding a test suite, dependency cleanup) are exactly the separable, real, low-stakes work a first
+`/mise-cook` run is for. Note which findings you're deferring to the kitchen this way, so Phase 7
+can pick them back up.
+
 **A near-no-op *setup* is fine — but a clean kitchen exists to be cooked in.** On an already-healthy
 project the setup phases collapse to "already done," and you should not manufacture busywork (no
 pointless reorg, no README churn on a good repo). But **do not mistake "nothing to fix" for "nothing
@@ -552,6 +564,24 @@ When you wire `/mise-cook`, configure it to **size the cook count to the host's 
 (cores/memory/load, not a fixed number) and to be **local-first but cloud-adaptive** — handing
 local-only work (native builds, sims, signing) off to a local session. Both per the "adapt to
 the environment" Guiding principle.
+
+**Don't stop at naming what each command does — show its first use.** For every command they
+accept, give one concrete example invocation built from *this project's actual goal or next
+step* (from the interview or the health report), not a generic template — e.g. "once you're
+ready to build the auth flow, try `/mise-cook implement login + signup, wired to the existing
+User model`" rather than just "`/mise-cook` runs a multi-agent workflow." A name and a one-line
+pitch don't teach usage; a worked example tied to their own work does — and it costs one line.
+
+**If Phase 2 deferred real remediation work to the kitchen, don't just describe it — offer to
+fire it now.** Walk the user to the actual findings you flagged as cook-sized (the God-file
+split, the missing test suite, whatever it was), propose them as stations (what's separable, what
+serializes), and ask if they want to fire `/mise-cook` against their own backlog right here —
+their **first cook should be their own real problem**, not a toy example. If they say yes, run it
+per `WORKFLOW-ORCHESTRATION.md` (cut the pass, size stations to the host, verify before
+integrating) and narrate what's happening as it happens — the pass being cut, a station firing —
+since this is their first time seeing the kitchen run. If they'd rather defer it to later, that's
+fine — leave it noted (deferred list, Phase 9 stamp) so a future `/mise-cook` or Update pass can
+pick it back up; don't pressure a "yes."
 
 ---
 
