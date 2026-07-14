@@ -152,6 +152,16 @@ only for **your own** tool calls, never for the **human**. When you need the *us
 manual (rotate a key, run a first command, open a dashboard), give steps that fit their surface
 rather than assuming a shell prompt.
 
+**Ask with the interactive picker, not a wall of prose.** Claude Code can present a question as
+selectable multiple-choice options (the `AskUserQuestion` UI). Whenever you ask the user something
+with discrete answers — an interview choice (platform, new-vs-existing, experience level), a stack
+recommendation, or a consent gate ("proceed with this plan?") — use it: **one question at a time**,
+a few clear options, the **recommended one marked**, and always an "Other / let me type it" escape
+so they are never boxed in. It is far friendlier than a paragraph of questions, especially for a
+newer user, and it *is* the "let Claude interview you" pattern. Keep genuinely open-ended prompts
+("what are you building?") as normal conversation, and fall back to prose on any surface that does
+not offer the picker.
+
 ---
 
 ### Phase 0 — Detect the situation (do this silently, then summarize)
@@ -195,7 +205,8 @@ confirmation is a hard gate precisely because `pwd` is a guess. If a `.mise/` st
 
 ### Phase 1 — Interview
 
-Ask a compact set of questions (adapt to what you already learned; don't ask what you can see):
+Ask a compact set of questions (**use the interactive picker for the ones with discrete options,
+per the operating-loop note above**; adapt to what you already learned; don't ask what you can see):
 
 - **What are you building?** One or two sentences of vision. What inspired it?
 - **New or existing?** (You likely know — confirm.)
