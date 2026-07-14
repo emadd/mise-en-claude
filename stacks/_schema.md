@@ -9,7 +9,7 @@ modules short and factual.
 - **gitignore** — what must never be committed (build output, deps, secrets, OS junk).
 - **connectors** — MCP servers worth wiring for this stack, each with a one-line why.
 - **cli_tools** — the CLIs the workflow leans on (prefer these over dashboards).
-- **skills** — workflow Skills to offer (always includes `/orchestrate`, `/handoff`).
+- **skills** — workflow Skills to offer (always includes `/mise-cook`, `/mise-handoff`).
 - **claude_md_notes** — what a fresh agent must know before touching this code.
 - **first_command** — the "you're ready — run this" handoff.
 

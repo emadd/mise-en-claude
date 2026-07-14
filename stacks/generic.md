@@ -7,7 +7,7 @@ Used when detection doesn't match a known module. Reason from first principles, 
 - **gitignore:** the language's build/dependency output, `.env*`, editor cruft, `.DS_Store`.
 - **connectors:** only what the project actually touches.
 - **cli_tools:** `gh` at minimum; the language's package manager and test runner.
-- **skills:** `/orchestrate`, `/handoff`.
+- **skills:** `/mise-cook`, `/mise-handoff`.
 - **claude_md_notes:** how to build, how to test, how to run — the three things a fresh session
   always needs.
 - **first_command:** whatever proves the project runs (build + test, or start).

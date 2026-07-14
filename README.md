@@ -5,7 +5,7 @@
 **Get your project's *mise en place*: everything in its place before you build.**
 
 > ⚠️ **Early, and serious about safety.** The paste-in [`PROMPT.md`](./PROMPT.md) and the
-> `/orchestrate` command work today, and [`stacks/`](./stacks) covers iOS/iPadOS/macOS plus React,
+> `/mise-cook` command work today, and [`stacks/`](./stacks) covers iOS/iPadOS/macOS plus React,
 > Next.js, Angular, Flutter, React Native, and three backends. The safety behavior is validated by
 > a QA harness that runs `mise` against synthetic projects on more than one model (see
 > [Proven on itself](#proven-on-itself)). Mode B's `install.sh` installs the workflow commands
@@ -15,7 +15,7 @@
 `mise` is a paste-in prompt for [Claude Code](https://claude.com/claude-code) that interviews
 you about your project and then stands up (or upgrades) a real engineering foundation for it:
 git, a `CLAUDE.md`, a sane project structure, the right connectors and CLI tools, workflow
-skills like `/orchestrate`, and GitHub Issues as your workflow's memory. Stop fiddling with
+skills like `/mise-cook`, and GitHub Issues as your workflow's memory. Stop fiddling with
 setup and *start building*.
 
 It's the foundation a seasoned engineer would lay before writing a line of feature code: the
@@ -51,11 +51,11 @@ config:
 
 ```sh
 git clone https://github.com/emadd/mise
-cd mise && ./install.sh          # installs /orchestrate + /handoff for all your projects
+cd mise && ./install.sh          # installs /mise-cook + /mise-handoff for all your projects
 # or:  ./install.sh --project .  # install into just this project's ./.claude
 ```
 
-That gives you the **`/orchestrate`** kitchen-brigade command and **`/handoff`** (plus the
+That gives you the **`/mise-cook`** kitchen-brigade command and **`/mise-handoff`** (plus the
 orchestration playbook), globally or per-project. The install is non-destructive and idempotent: it
 backs up any command file you'd edited before replacing it, and skips files already current.
 
@@ -92,7 +92,7 @@ skip any phase. Nothing is installed or written without your yes.
 | **3 · Context** | Generates a starter `CLAUDE.md` and `README` from your interview, and lays down a project structure a real engineer would respect. |
 | **4 · Connections** | Wires **programmatic access** (MCP / API / CLI) to the services your project touches, so agents can *operate* them, not just read about them. |
 | **5 · CLI + tools** | Sets up `gh` and the other CLIs your workflow leans on; prefers a CLI/API over any dashboard, and flags browser-only bottlenecks. |
-| **6 · Skills + shortcuts** | Installs the workflow Skills and slash commands, including **`/orchestrate`**, the kitchen-brigade multi-agent workflow. |
+| **6 · Skills + shortcuts** | Installs the workflow Skills and slash commands, including **`/mise-cook`**, the kitchen-brigade multi-agent workflow. |
 | **7 · Persistence** | Wires GitHub Issues + git as your workflow's durable memory, so context survives between sessions. |
 | **8 · Verify + hand off** | Confirms everything works and hands you a first command to run. You're building in minutes, not hours. |
 

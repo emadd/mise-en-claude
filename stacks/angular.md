@@ -10,7 +10,7 @@
 - **connectors:** the backend / API.
 - **cli_tools:** `gh`; the package manager; the **`ng` Angular CLI** (scaffolding, build, test);
   `eslint`.
-- **skills:** `/orchestrate`, `/handoff`.
+- **skills:** `/mise-cook`, `/mise-handoff`.
 - **claude_md_notes:** standalone components vs NgModules (say which the project uses); DI
   patterns; state approach (signals vs NgRx); routing; the degree of RxJS usage (a real
   onboarding hurdle — note the conventions); the `ng build` / `ng serve` / `ng test` commands;

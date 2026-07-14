@@ -3,9 +3,9 @@
 # mise install.sh — Mode B (commands).
 #
 # Installs mise's vendored workflow commands into your Claude Code config:
-#   /orchestrate  — the kitchen-brigade multi-agent workflow
-#   /handoff      — write a durable session hand-off
-# plus WORKFLOW-ORCHESTRATION.md (the /orchestrate playbook).
+#   /mise-cook  — the kitchen-brigade multi-agent workflow
+#   /mise-handoff      — write a durable session hand-off
+# plus WORKFLOW-ORCHESTRATION.md (the /mise-cook playbook).
 #
 # The re-runnable /mise skill + the template library are still roadmap (see ARCHITECTURE.md);
 # this installs the commands that exist today.
@@ -48,7 +48,7 @@ while [ $# -gt 0 ]; do
 done
 
 # Verify we're running from a mise checkout that actually has the files.
-for f in commands/orchestrate.md commands/handoff.md WORKFLOW-ORCHESTRATION.md; do
+for f in commands/mise-cook.md commands/mise-handoff.md WORKFLOW-ORCHESTRATION.md; do
   if [ ! -f "$REPO/$f" ]; then
     echo "error: $REPO/$f not found — run install.sh from a mise checkout." >&2
     exit 1
@@ -56,8 +56,8 @@ for f in commands/orchestrate.md commands/handoff.md WORKFLOW-ORCHESTRATION.md; 
 done
 
 echo "mise: installing the workflow commands into $SCOPE"
-echo "  -> $TARGET/commands/orchestrate.md"
-echo "  -> $TARGET/commands/handoff.md"
+echo "  -> $TARGET/commands/mise-cook.md"
+echo "  -> $TARGET/commands/mise-handoff.md"
 echo "  -> $TARGET/WORKFLOW-ORCHESTRATION.md"
 echo
 
@@ -88,10 +88,10 @@ install_file() {
   echo "  + $dst"
 }
 
-install_file commands/orchestrate.md      "$TARGET/commands/orchestrate.md"
-install_file commands/handoff.md          "$TARGET/commands/handoff.md"
+install_file commands/mise-cook.md      "$TARGET/commands/mise-cook.md"
+install_file commands/mise-handoff.md          "$TARGET/commands/mise-handoff.md"
 install_file WORKFLOW-ORCHESTRATION.md    "$TARGET/WORKFLOW-ORCHESTRATION.md"
 
 echo
-echo "Done. Start (or restart) Claude Code and try:  /orchestrate <a multi-part goal>"
-echo "Hand-off any time with:  /handoff"
+echo "Done. Start (or restart) Claude Code and try:  /mise-cook <a multi-part goal>"
+echo "Hand-off any time with:  /mise-handoff"

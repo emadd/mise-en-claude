@@ -15,7 +15,7 @@
 - **cli_tools:** `gh`; the package manager (from the lockfile); the ORM/migration CLI
   (`prisma` / `drizzle-kit` / `knex`); `psql` (or the DB's CLI); `tsx` / `nodemon` for dev;
   `vitest` / `jest`.
-- **skills:** `/orchestrate`, `/handoff`.
+- **skills:** `/mise-cook`, `/mise-handoff`.
 - **claude_md_notes:** the DB + ORM and the **migration workflow** (how to create and run one;
   **never edit a migration that has shipped**); connection pooling; env/secret handling; the
   routing + middleware structure; the auth approach (JWT / sessions); input validation; how to
