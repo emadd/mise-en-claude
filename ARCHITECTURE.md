@@ -69,16 +69,16 @@ How the Install Prompt is built.
 
 ## 2. Repo layout
 
-> This is the **target** layout. Built today: `PROMPT.md`, `stacks/`, `commands/orchestrate.md`,
-> `tests/`, and the top-level docs. Still roadmap (Mode B): `install.sh`, `phases/`, and
-> `templates/`.
+> This is the **target** layout. Built today: `PROMPT.md`, `stacks/`, `commands/` (`orchestrate`,
+> `handoff`), `install.sh` (installs the commands), `tests/`, and the top-level docs. Still roadmap
+> (Mode B's fuller half): the re-runnable `/mise` skill, `phases/`, and `templates/`.
 
 ```
 mise/
 ├── README.md                  # front door (see README.md)
 ├── ARCHITECTURE.md            # this file
 ├── PROMPT.md                  # THE artifact — the paste-in master prompt (Mode A)
-├── install.sh                 # (roadmap) /mise skill + templates installer for ~/.claude (Mode B)
+├── install.sh                 # installs the vendored commands (/orchestrate, /handoff) into Claude Code (Mode B)
 ├── LICENSE                    # MIT (proposed)
 │
 ├── phases/                    # one module per setup phase — the prompt @-includes these
@@ -285,8 +285,10 @@ couple of templates — **the extensibility story is the community story**, and 
 
 - **Mode A (`PROMPT.md`)** is the canonical artifact — copy/paste, zero install, works on any
   machine with Claude Code.
-- **Mode B (`/mise` skill via `install.sh`)** copies the phase modules, templates, skills, and
-  commands into the user's `~/.claude` so `/mise` is available everywhere and re-runnable.
+- **Mode B (`install.sh`)** installs the vendored **commands** (`/orchestrate`, `/handoff` + the
+  orchestration playbook) into `~/.claude` (or a project's `./.claude`), non-destructively and
+  idempotently — available today. The fuller half (the re-runnable **`/mise` skill** plus the
+  `phases/` + `templates/` it renders from, so `/mise` acts as an updater) is still roadmap.
 - **Versioning against Claude Code.** Claude Code evolves (new Skills, MCP surface, slash-command
   conventions). `mise` pins a **compatibility note** at the top of `PROMPT.md` and tags releases;
   a `CHANGELOG.md` tracks what changed and why. This is the "living artifact" promise — a reason
