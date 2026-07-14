@@ -24,3 +24,10 @@
 
 Notes: iPadOS and macOS are the same multiplatform SwiftUI stack — flag Catalyst / multiplatform
 targets in the `CLAUDE.md`. This is mise's **reference stack**; keep it the most complete.
+
+**Automation (drive it yourself):** build, run, and test via `xcodebuild` / `xcrun` / `swift` in
+*your* shell — never tell the user to open Xcode and hit Run, and never hand them terminal commands
+to paste. The irreducibly-manual Apple steps to hand off (and name for them): loading a plugin
+(**Audio Unit / AUv3**) into its host to actually hear it (**Logic Pro**, GarageBand, a DAW),
+on-device runs + code signing, permission prompts, and Instruments profiling. Automate everything
+else. (macOS audio-plugin / Audio Unit work lives under this stack until it gets its own module.)
