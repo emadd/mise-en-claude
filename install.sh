@@ -3,8 +3,9 @@
 # mise install.sh — Mode B (commands).
 #
 # Installs mise's vendored workflow commands into your Claude Code config:
-#   /mise-cook  — the kitchen-brigade multi-agent workflow
-#   /mise-handoff      — write a durable session hand-off
+#   /mise-cook     — the kitchen-brigade multi-agent workflow
+#   /mise-handoff  — write a durable session hand-off
+#   /mise-clean    — sweep the project for hygiene cruft
 # plus WORKFLOW-ORCHESTRATION.md (the /mise-cook playbook).
 #
 # The re-runnable /mise skill + the template library are still roadmap (see ARCHITECTURE.md);
@@ -48,7 +49,7 @@ while [ $# -gt 0 ]; do
 done
 
 # Verify we're running from a mise checkout that actually has the files.
-for f in commands/mise-cook.md commands/mise-handoff.md WORKFLOW-ORCHESTRATION.md; do
+for f in commands/mise-cook.md commands/mise-handoff.md commands/mise-clean.md WORKFLOW-ORCHESTRATION.md; do
   if [ ! -f "$REPO/$f" ]; then
     echo "error: $REPO/$f not found — run install.sh from a mise checkout." >&2
     exit 1
@@ -58,6 +59,7 @@ done
 echo "mise: installing the workflow commands into $SCOPE"
 echo "  -> $TARGET/commands/mise-cook.md"
 echo "  -> $TARGET/commands/mise-handoff.md"
+echo "  -> $TARGET/commands/mise-clean.md"
 echo "  -> $TARGET/WORKFLOW-ORCHESTRATION.md"
 echo
 
@@ -88,10 +90,11 @@ install_file() {
   echo "  + $dst"
 }
 
-install_file commands/mise-cook.md      "$TARGET/commands/mise-cook.md"
-install_file commands/mise-handoff.md          "$TARGET/commands/mise-handoff.md"
-install_file WORKFLOW-ORCHESTRATION.md    "$TARGET/WORKFLOW-ORCHESTRATION.md"
+install_file commands/mise-cook.md       "$TARGET/commands/mise-cook.md"
+install_file commands/mise-handoff.md    "$TARGET/commands/mise-handoff.md"
+install_file commands/mise-clean.md      "$TARGET/commands/mise-clean.md"
+install_file WORKFLOW-ORCHESTRATION.md   "$TARGET/WORKFLOW-ORCHESTRATION.md"
 
 echo
 echo "Done. Start (or restart) Claude Code and try:  /mise-cook <a multi-part goal>"
-echo "Hand-off any time with:  /mise-handoff"
+echo "Sweep up any time with:  /mise-clean     Hand-off with:  /mise-handoff"

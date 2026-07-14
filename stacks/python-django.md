@@ -13,7 +13,7 @@
 - **cli_tools:** `gh`; the Python env manager (`uv` / pip / poetry); **`manage.py`** (the
   swiss-army CLI: `runserver`, `makemigrations`, `migrate`, `createsuperuser`, `shell`, `test`);
   `psql`; `ruff` / `black`.
-- **skills:** `/mise-cook`, `/mise-handoff`.
+- **skills:** `/mise-cook`, `/mise-handoff`, `/mise-clean`.
 - **claude_md_notes:** the app layout and what each app owns; the **migrations workflow**
   (`makemigrations` → `migrate`; Django migrations are first-class — **never delete one that has
   shipped**); settings management + `SECRET_KEY`/env; DRF if it's an API; the auth model (Django

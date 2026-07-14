@@ -70,7 +70,7 @@ How the Install Prompt is built.
 ## 2. Repo layout
 
 > This is the **target** layout. Built today: `PROMPT.md`, `stacks/`, `commands/` (`mise-cook`,
-> `mise-handoff`), `install.sh` (installs the commands), `tests/`, and the top-level docs. Still roadmap
+> `mise-handoff`, `mise-clean`), `install.sh` (installs the commands), `tests/`, and the top-level docs. Still roadmap
 > (Mode B's fuller half): the re-runnable `/mise` skill, `phases/`, and `templates/`.
 
 ```
@@ -78,7 +78,7 @@ mise/
 ├── README.md                  # front door (see README.md)
 ├── ARCHITECTURE.md            # this file
 ├── PROMPT.md                  # THE artifact — the paste-in master prompt (Mode A)
-├── install.sh                 # installs the vendored commands (/mise-cook, /mise-handoff) into Claude Code (Mode B)
+├── install.sh                 # installs the vendored commands (/mise-cook, /mise-handoff, /mise-clean) into Claude Code (Mode B)
 ├── LICENSE                    # MIT (proposed)
 │
 ├── phases/                    # one module per setup phase — the prompt @-includes these
@@ -116,7 +116,8 @@ mise/
 │
 ├── commands/                  # slash-command definitions mise can install
 │   ├── mise-cook.md           # the kitchen-brigade /mise-cook command (vendored — built)
-│   └── mise-handoff.md        # the /mise-handoff session hand-off command (vendored — built)
+│   ├── mise-handoff.md        # the /mise-handoff session hand-off command (vendored — built)
+│   └── mise-clean.md          # the /mise-clean hygiene-sweep command (vendored — built)
 │
 ├── WORKFLOW-ORCHESTRATION.md   # the extended brigade playbook (companion to /mise-cook)
 │
@@ -270,7 +271,7 @@ A stack module (`stacks/<name>.md`) fills the `_schema.md` contract:
 - gitignore:         # → templates/gitignore/<name>.gitignore
 - connectors:        # MCP servers worth wiring, each with a one-line why + config pointer
 - cli_tools:         # CLIs the workflow uses, install hints per OS
-- skills:            # workflow Skills to offer (always includes /mise-cook, /mise-handoff)
+- skills:            # workflow Skills to offer (always includes /mise-cook, /mise-handoff, /mise-clean)
 - claude_md_notes:   # stack-specific CLAUDE.md guidance to seed
 - first_command:     # the "you're ready — run this" handoff for this stack
 ```
@@ -286,7 +287,7 @@ couple of templates — **the extensibility story is the community story**, and 
 
 - **Mode A (`PROMPT.md`)** is the canonical artifact — copy/paste, zero install, works on any
   machine with Claude Code.
-- **Mode B (`install.sh`)** installs the vendored **commands** (`/mise-cook`, `/mise-handoff` + the
+- **Mode B (`install.sh`)** installs the vendored **commands** (`/mise-cook`, `/mise-handoff`, `/mise-clean` + the
   orchestration playbook) into `~/.claude` (or a project's `./.claude`), non-destructively and
   idempotently — available today. The fuller half (the re-runnable **`/mise` skill** plus the
   `phases/` + `templates/` it renders from, so `/mise` acts as an updater) is still roadmap.

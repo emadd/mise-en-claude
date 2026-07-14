@@ -12,7 +12,7 @@
 - **connectors:** the backend / Firebase / API if used.
 - **cli_tools:** `gh`; the `flutter` and `dart` CLIs; CocoaPods (iOS); the platform toolchains
   (Xcode for iOS, Android SDK). **iOS/macOS builds need a Mac** — local-only step.
-- **skills:** `/mise-cook`, `/mise-handoff`.
+- **skills:** `/mise-cook`, `/mise-handoff`, `/mise-clean`.
 - **claude_md_notes:** the **state-management choice** (Riverpod / Bloc / Provider — pick one and
   say which, it shapes everything); routing (`go_router`?); platform-channel usage for native;
   target platforms (iOS / Android / web / desktop); the `flutter run` / `flutter test` commands;

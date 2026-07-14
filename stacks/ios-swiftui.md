@@ -15,7 +15,7 @@
 - **connectors:** usually none beyond `gh` — the toolchain is local.
 - **cli_tools:** `gh`; `xcodebuild` / `xcrun` (ship with Xcode); `swift` (SPM); optionally
   `xcbeautify` (readable logs), `swiftlint` / `swift-format` (style).
-- **skills:** `/mise-cook`, `/mise-handoff`.
+- **skills:** `/mise-cook`, `/mise-handoff`, `/mise-clean`.
 - **claude_md_notes:** the model layer + persistence approach (SwiftData / Core Data / CloudKit,
   and any sync rules), the build/test invocation (scheme + destination), deployment targets, and
   any schema-migration cautions — what a fresh session must know before editing.

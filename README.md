@@ -51,12 +51,12 @@ config:
 
 ```sh
 git clone https://github.com/emadd/mise
-cd mise && ./install.sh          # installs /mise-cook + /mise-handoff for all your projects
+cd mise && ./install.sh          # installs /mise-cook, /mise-handoff + /mise-clean for all your projects
 # or:  ./install.sh --project .  # install into just this project's ./.claude
 ```
 
-That gives you the **`/mise-cook`** kitchen-brigade command and **`/mise-handoff`** (plus the
-orchestration playbook), globally or per-project. The install is non-destructive and idempotent: it
+That gives you **`/mise-cook`** (kitchen brigade), **`/mise-handoff`** (session hand-off), and
+**`/mise-clean`** (hygiene sweep), plus the orchestration playbook, globally or per-project. The install is non-destructive and idempotent: it
 backs up any command file you'd edited before replacing it, and skips files already current.
 
 Still on the roadmap: the re-runnable **`/mise` skill** and the **template library**, so `/mise`

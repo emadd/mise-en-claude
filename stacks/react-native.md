@@ -14,7 +14,7 @@
 - **cli_tools:** `gh`; the package manager; the **Expo CLI** (`npx expo`) or **RN CLI**
   (`npx react-native`); CocoaPods (bare iOS); the Android SDK + an emulator. **iOS builds need a
   Mac with Xcode** — flag this as a local-only step (the `/mise-cook` local-first rule).
-- **skills:** `/mise-cook`, `/mise-handoff`.
+- **skills:** `/mise-cook`, `/mise-handoff`, `/mise-clean`.
 - **claude_md_notes:** **Expo vs bare** (lead with it); navigation lib (React Navigation / Expo
   Router); state approach; native-module boundaries; which platforms build **locally** (iOS →
   Mac + Xcode; Android → SDK); EAS Build if Expo; the per-platform run commands.
