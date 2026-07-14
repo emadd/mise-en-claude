@@ -69,12 +69,16 @@ How the Install Prompt is built.
 
 ## 2. Repo layout
 
+> This is the **target** layout. Built today: `PROMPT.md`, `stacks/`, `commands/orchestrate.md`,
+> `tests/`, and the top-level docs. Still roadmap (Mode B): `install.sh`, `phases/`, and
+> `templates/`.
+
 ```
 mise/
 ├── README.md                  # front door (see README.md)
 ├── ARCHITECTURE.md            # this file
 ├── PROMPT.md                  # THE artifact — the paste-in master prompt (Mode A)
-├── install.sh                 # installs the /mise skill + templates into ~/.claude (Mode B)
+├── install.sh                 # (roadmap) /mise skill + templates installer for ~/.claude (Mode B)
 ├── LICENSE                    # MIT (proposed)
 │
 ├── phases/                    # one module per setup phase — the prompt @-includes these
