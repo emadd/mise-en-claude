@@ -14,7 +14,7 @@
   programmatically; a Figma MCP is worth it for design-driven UI work.
 - **cli_tools:** `gh`; the package manager **detected from the lockfile** (`pnpm` / `npm` /
   `yarn`, don't guess); the Vite CLI; `eslint` + `prettier`; `vitest` for tests.
-- **skills:** `/mise-cook`, `/mise-handoff`.
+- **skills:** `/mise-cook`, `/mise-handoff`, `/mise-clean`.
 - **claude_md_notes:** the bundler (Vite/CRA), router (`react-router`?), state approach
   (Context / Zustand / Redux / TanStack Query — name the one in use), test runner (Vitest/Jest +
   React Testing Library), path aliases, the `VITE_`/`REACT_APP_` env-var convention (and that
