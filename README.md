@@ -57,6 +57,20 @@ git clone https://github.com/emadd/mise
 cd mise && ./install.sh
 ```
 
+### Staying up to date
+
+`mise` improves over time, so how you get the newest version depends on your mode:
+
+- **Mode A (paste):** the prompt lives only in your session, so "updating `mise`" just means
+  **re-copying the latest `PROMPT.md` and pasting it into a fresh session.** There is nothing
+  installed to update, and nothing to run.
+- **Mode B (planned):** once the installed `/mise` skill ships, updating becomes a real command
+  you run once, and `/mise` picks up the latest on its own.
+
+Note this is separate from **Update mode** (below), which brings *your project's* foundation up to
+the latest guidance. Updating the *tool* is the paste/skill above; updating your *project* is
+Update mode.
+
 ---
 
 ## What it sets up
