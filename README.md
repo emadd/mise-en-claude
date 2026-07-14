@@ -8,8 +8,9 @@
 > `/orchestrate` command work today, and [`stacks/`](./stacks) covers iOS/iPadOS/macOS plus React,
 > Next.js, Angular, Flutter, React Native, and three backends. The safety behavior is validated by
 > a QA harness that runs `mise` against synthetic projects on more than one model (see
-> [Proven on itself](#proven-on-itself)). Still on the roadmap: the `Mode B` skill, `install.sh`,
-> and the templates described below ([`ARCHITECTURE.md`](./ARCHITECTURE.md)). Feedback welcome.
+> [Proven on itself](#proven-on-itself)). Mode B's `install.sh` installs the workflow commands
+> today; still on the roadmap: the re-runnable `/mise` skill and the templates
+> ([`ARCHITECTURE.md`](./ARCHITECTURE.md)). Feedback welcome.
 
 `mise` is a paste-in prompt for [Claude Code](https://claude.com/claude-code) that interviews
 you about your project and then stands up (or upgrades) a real engineering foundation for it:
@@ -43,19 +44,24 @@ IDE extension.
 
 That's it. `mise` will interview you, show you a plan, and set nothing up until you say yes.
 
-### Mode B: clone + install (planned, not yet available)
+### Mode B: clone + install (the workflow commands)
 
-Mode B is on the roadmap. The plan: `git clone` the repo and run an installer that puts a
-`/mise` skill and a template library into your Claude Code config, so `/mise` can re-run as an
-**updater** whenever your project drifts. Until it ships, use **Mode A** above (paste
-`PROMPT.md`), which does everything except the templated skill install.
-
-Planned shape, once built:
+Clone the repo and run the installer to put mise's **workflow commands** into your Claude Code
+config:
 
 ```sh
 git clone https://github.com/emadd/mise
-cd mise && ./install.sh
+cd mise && ./install.sh          # installs /orchestrate + /handoff for all your projects
+# or:  ./install.sh --project .  # install into just this project's ./.claude
 ```
+
+That gives you the **`/orchestrate`** kitchen-brigade command and **`/handoff`** (plus the
+orchestration playbook), globally or per-project. The install is non-destructive and idempotent: it
+backs up any command file you'd edited before replacing it, and skips files already current.
+
+Still on the roadmap: the re-runnable **`/mise` skill** and the **template library**, so `/mise`
+can act as an updater whenever your project drifts. For the full setup/rescue flow today, use
+**Mode A** above.
 
 ### Staying up to date
 
