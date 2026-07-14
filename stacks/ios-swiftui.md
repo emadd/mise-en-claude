@@ -8,7 +8,10 @@
   in their own target.
 - **gitignore:** `DerivedData/`, `build/`, `.build/` (SPM), `*.xcuserstate`, `xcuserdata/`,
   `.DS_Store`, `*.ipa`, `*.dSYM.zip`. **Never** commit signing certs, provisioning profiles, or
-  API keys — surface them for a config/secret store.
+  API keys — surface them for a config/secret store. **`project.pbxproj`:** if the project is
+  hand-managed (plain Xcode), **track it** — it's the project's source of truth, and ignoring it
+  orphans the project. If a generator owns it (XcodeGen `project.yml`, Tuist), ignore the generated
+  `*.xcodeproj` and track the generator's config instead.
 - **connectors:** usually none beyond `gh` — the toolchain is local.
 - **cli_tools:** `gh`; `xcodebuild` / `xcrun` (ship with Xcode); `swift` (SPM); optionally
   `xcbeautify` (readable logs), `swiftlint` / `swift-format` (style).

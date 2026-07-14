@@ -5,7 +5,9 @@
 - **structure:** for new work prefer the **App Router** (`app/`). Components are **server by
   default**; add `'use client'` only where you need interactivity or browser APIs — keep that
   boundary as low in the tree as possible. `components/`, `lib/`, and route handlers under
-  `app/api/`. TypeScript with `strict`. Colocate.
+  `app/api/`. TypeScript with `strict`. Colocate. **Scaffolder heads-up:** `create-next-app` (and
+  other JS scaffolders) may pre-seed their own `CLAUDE.md` / `AGENTS.md` — on rescue, **merge into
+  it, never clobber** (Phase 4), and reconcile rather than overwrite the scaffold's conventions.
 - **gitignore:** `node_modules/`, `.next/`, `out/`, `build/`, `.env*` (keep `.env.example`),
   `.vercel/`, `coverage/`, `.DS_Store`. (`next-env.d.ts` is generated but conventionally
   committed.) **Env discipline matters here:** only `NEXT_PUBLIC_`-prefixed vars reach the
