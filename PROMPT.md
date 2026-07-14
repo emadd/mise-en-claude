@@ -231,7 +231,9 @@ If there is existing code, make the work reversible before you touch anything:
   junk or secrets), and a single commit capturing the current state as a recovery point. Get
   consent, then do it.
 - **Already a repo?** Note the current branch/commit and propose working on a `mise/rescue`
-  branch so `main` is untouched. Get consent, then create/switch.
+  branch so `main` is untouched. Get consent, then create/switch. **If the tree is already clean
+  and committed, that tip *is* the recovery point — record it and branch; don't manufacture an
+  empty baseline commit.**
 - **Secrets in the tree? Surface it *before* you commit.** First scan for secrets (findings-only
   — see Reference). Then:
   - **Config/secret files** (`.env` and friends): make sure `.gitignore` excludes them so the
@@ -243,6 +245,22 @@ If there is existing code, make the work reversible before you touch anything:
     first** — keeping a pre-change backup copy as the safety net — so the recovery point is clean
     history. Default to local-safe; let them override. **A backup of a secret is still a secret:**
     `.gitignore` the backup location *before* you create it, so a pre-change copy is never tracked.
+- **Before the baseline commit, gate the *staged* set — and untrack, don't just ignore.**
+  `.gitignore` only stops files that were never staged; the moment a secret is tracked (an early
+  `git add -A`, or it was committed before you arrived) gitignore silently stops applying and
+  `git check-ignore` will even report it as *not ignored*. So after staging, re-scan the **staged**
+  set by name/location **and by shape** (a JSON holding `private_key`, an assignment holding a
+  literal) — a name-only glob misses files like `*firebase-crashreporting*.json`. For a file whose
+  content is **secret with no code** the gate catches (a `.env`, a key, a service-account JSON, an
+  API-key-bearing `plist`/`xcconfig`), `git rm --cached` it **and add it to `.gitignore` in the same
+  breath** — untracking drops it from *this* commit, and the ignore entry is what stops the *next*
+  blanket `git add -A` (say, when you stage `CLAUDE.md` in Phase 4) from silently re-tracking it.
+  **Untracking without ignoring is not durable.** (Better still: ignore it *before* the first
+  `git add`, so the gate finds nothing and `git rm --cached` is only the recovery path for an
+  already-tracked secret.) For a **source file that merely *contains* a literal** (a
+  `.js`/`.swift` that also holds real code), do **not** `git rm --cached` it — that orphans the code
+  from the recovery point; instead remediate the literal in place, value-blind (→ env reference),
+  keep the file tracked, and fall back to the local-safe (unpushed) baseline per the rule above.
 
 This snapshot is its own consented step — the recovery point comes *before* the Phase 2 plan, on
 purpose, so the plan is approved against an already-safe baseline. State plainly: "Your current
@@ -262,7 +280,7 @@ rescue flow (you already know the project — don't re-interview from scratch):
    first-class Update job.** If the stamp has deferred items (an ambiguous env-mapping awaiting
    confirmation, unrotated keys, un-pinned deps), surface those first.
 2. **Fetch the latest guidance** — with the user's consent, pull the newest canonical mise
-   (this `PROMPT.md` and its stack notes) from the source repo (`<REPO_RAW_URL>` — see the
+   (this `PROMPT.md` and its stack notes) from the source repo (`https://raw.githubusercontent.com/emadd/mise/main` — see the
    stamp) using whatever's available: `git pull` a clone, `gh`, `WebFetch`, or `curl`.
    **Reconcile against the *fetched* version, not the copy you were pasted from.** If you can't
    fetch, say so plainly and offer to proceed with the version in front of you.
@@ -291,6 +309,12 @@ existing), adapt:
    (backend / web / mobile / shared library / infra). Confirm with the user that these are **one
    product** (related surfaces), not unrelated repos that happen to share a folder — the plan is
    very different if they're unrelated.
+   - **For the recovery point, don't wait on the topology decision.** On a no-git workspace,
+     "snapshot before you touch anything" and "decide monorepo-vs-split with the user" pull against
+     each other — you can't defer the snapshot, but topology is the user's call. Resolve it by
+     **defaulting the recovery point to a single root-level git repo** capturing the whole tree
+     (Phase S) — safe, complete, and fully reversible — then revisit monorepo-vs-separate-repos
+     *after* the tree is safe. Record the topology question as a deferred decision in the stamp.
 2. **Judge the organization; suggest a reorg *for context*.** If the surfaces are tangled —
    mixed concerns at the root, no clear per-project boundary, a frontend and a server sharing one
    undifferentiated folder — **propose a clean workspace layout** (`apps/`, `services/`,
@@ -353,6 +377,10 @@ one (an endpoint dumping user data, plaintext passwords on disk) still earns a *
 Then present the **plan**: an ordered list of what you'll do, phase by phase. For rescue, order
 by safety: **secrets → recoverability → structure → context → workflow.** Let the user drop any
 item. **Wait for explicit approval before executing.**
+
+**A near-no-op rescue is a valid outcome.** On an already-healthy project most phases collapse to
+"already done" — the honest deliverable may be just a `CLAUDE.md` and the stamp. That's success,
+not a shortfall; don't manufacture changes to look busy.
 
 ---
 
@@ -426,9 +454,11 @@ Offer the workflow Skills and slash commands that match how they'll work, includ
 **`/orchestrate`** (a multi-agent "kitchen brigade" workflow: a lead session fans work to
 isolated worktree agents and integrates their results at *the pass*). It's a **real vendored
 command** — install it by copying `commands/orchestrate.md` into the project's (or the user's)
-`.claude/commands/`, and its extended playbook `WORKFLOW-ORCHESTRATION.md` alongside. (In a
-paste-only run without the repo files, fetch them from the mise repo first, or point the user to
-Mode B.) Install only what they want; explain what each does before installing. **Mention that the
+`.claude/commands/`, and its extended playbook `WORKFLOW-ORCHESTRATION.md` alongside. **In a
+paste-only run you won't have the repo files on hand — fetch them from the canonical raw URLs
+first** (`https://raw.githubusercontent.com/emadd/mise/main/commands/orchestrate.md` and
+`.../main/WORKFLOW-ORCHESTRATION.md`) via `curl`/`WebFetch`, write them into place, then install.
+If you can't fetch, say so and point the user to Mode B. Install only what they want; explain what each does before installing. **Mention that the
 kitchen-brigade metaphor is the default flavor, not a requirement** — the user can run it plain or
 re-skin it (submarine, starship, whatever); the mechanics are what matter, the costume is theirs.
 
@@ -461,7 +491,7 @@ resolve, `.gitignore` actually ignores the right things, no secrets staged). The
 - If rescue: remind them their original state is on the recovery point / `main`, and how to
   compare or roll back.
 - **Write/update the `.mise/` stamp** — the mise version/commit you applied, the date, the mode,
-  and the choices made (stack, phases, skills, connectors) + the `<REPO_RAW_URL>` to fetch from.
+  and the choices made (stack, phases, skills, connectors) + the `https://raw.githubusercontent.com/emadd/mise/main` to fetch from.
   Commit it. This is what lets a future run *update and reconcile* (Phase U).
 - Hand them **one concrete first command** tied to their goal — the thing to run next so they're
   building, not configuring.
@@ -492,7 +522,10 @@ CLI, a CLAUDE.md that captures how the code actually works, and a first "prove i
 ## Reference — secrets protocol
 
 - **In the working tree:** propose adding to `.gitignore` + moving the value to a proper secret
-  store; explain how. Don't print the value.
+  store; explain how. Don't print the value. **Untracking is not remediation:** `git rm --cached`
+  / `.gitignore` stop *future* tracking, but if the secret was ever committed it still lives in
+  history and is compromised until rotated. Say so plainly, so nobody mistakes a clean working
+  tree for a fixed leak.
 - **Already committed (in history):** flag it clearly. Explain that the only real fix is to
   **rotate the exposed credential** and, if desired, scrub history with `git filter-repo`/BFG —
   a **destructive** history rewrite. Lay out the steps, note the risks (collaborators must
@@ -519,7 +552,10 @@ readable, and committed. A minimal shape (adapt as needed):
 - **On first setup (Phase 9):** write the stamp with the version/commit you applied and the
   choices made. **A self-contained paste (Mode A) may not know its own version or repo URL** — if
   so, record what you know, leave the rest as `unknown`, and tell the user that full Update mode
-  needs the cloned repo / installed skill (Mode B). Don't invent a version.
+  needs the cloned repo / installed skill (Mode B). Don't invent a version. **Then confirm the
+  stamp is actually trackable** — an aggressive stack `.gitignore` (Xcode's, for one) can silently
+  swallow `.mise/`; `git check-ignore .mise/state.json` should print nothing. If it's ignored, add
+  a `!.mise/` negation so the living stamp actually gets committed.
 - **On update (Phase U):** read it to learn the baseline, fetch the latest from `repoRawUrl`,
   reconcile, then re-stamp to the new version.
 - The stamp records *intent* (what mise applied), so "drift" = current reality minus stamped
@@ -536,11 +572,25 @@ The rule: **fix the leak without ever holding the secret.**
   one isn't installed, offer to install it — but **installing the scanner is a global-tier action**
   (Prime Directive 1): get that higher-stakes consent, don't `brew install` unprompted. If you must
   fall back to `grep`, mask by **default-
-  deny** — output only `file:line`, never the matched line. A portable, copy-paste-safe recipe
+  deny** — output only `file:line`, never the matched line. (A *partial*-line mask is unsound: one
+  line can hold several secrets — e.g. `db: { host: '…', pass: '…' }` — so masking "the first quoted
+  value" still leaks the rest. Emit `file:line` only, or a verdict from a shape classifier; never a
+  surviving fragment of the value line.) A portable, copy-paste-safe recipe
   (works with BSD/macOS `sed`): `grep -rnoE '<pattern>' . | sed -E 's/^([^:]+:[0-9]+):.*/\1: [redacted]/'`
-  — emits `file:line` only. (Avoid fancy Unicode mask tokens; BSD `sed` chokes on them.) Reading
+  — emits `file:line` only. (Avoid fancy Unicode mask tokens; BSD `sed` chokes on them.) When you
+  need to *classify* rather than just locate — literal vs `process.env` reference, is-this-real —
+  prefer an **`awk` verdict-only classifier** that prints a verdict per line and never the value;
+  it's the robust default (the one-line `sed` recipe is portable but fragile, and anything fancier
+  breaks on BSD `sed`). Reading
   a source file to *understand the code* is fine and expected; but never read a file *to eyeball a
-  secret*, and treat any secret you do encounter as by-reference the instant you see it.
+  secret*, and treat any secret you do encounter as by-reference the instant you see it. **Watch
+  the mixed-content trap:** a config or service-account file (`config/all.js`, `firebase.json`)
+  holds structure and secret values in the same file, so an innocent "read it to understand config"
+  ingests the literal. Inspect those value-blind — list a JSON's keys with a **key-only
+  extractor** (`grep -oE '"[a-z_]+":'` — note a naive `json.load(...).keys()` still pulls every
+  value into process memory), or classify an assignment with a shape test that prints a verdict not the line
+  (`awk '$0 ~ /process\.env/ {print "ref"; next} {print "literal"}'`) — instead of opening the
+  whole file.
 - **Reference, don't reproduce.** In reports and diffs, refer to a secret as
   `OPENAI_API_KEY in server.js:12` or a redacted `sk-…rstuv`, never the literal.
 - **Remediate structurally.** Replace a hardcoded literal with an `env`-var *reference* (you
