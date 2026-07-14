@@ -43,17 +43,19 @@ IDE extension.
 
 That's it. `mise` will interview you, show you a plan, and set nothing up until you say yes.
 
-### Mode B: clone (richer, templated experience)
+### Mode B: clone + install (planned, not yet available)
+
+Mode B is on the roadmap. The plan: `git clone` the repo and run an installer that puts a
+`/mise` skill and a template library into your Claude Code config, so `/mise` can re-run as an
+**updater** whenever your project drifts. Until it ships, use **Mode A** above (paste
+`PROMPT.md`), which does everything except the templated skill install.
+
+Planned shape, once built:
 
 ```sh
 git clone https://github.com/emadd/mise
-cd mise && ./install.sh    # installs the /mise skill + templates into your Claude Code config
+cd mise && ./install.sh
 ```
-
-Then, from *your* project: `claude` → `/mise`
-
-Mode B gives you the full template library and lets `/mise` re-run as an **updater** any time
-your project drifts.
 
 ---
 
