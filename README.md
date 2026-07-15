@@ -95,7 +95,7 @@ skip any phase. Nothing is installed or written without your yes.
 
 | Phase | What it does |
 |---|---|
-| **0 · Interview** | Asks about your vision, stack, goals, and whether this is a new or existing project. (Anthropic's "let Claude interview you" pattern.) |
+| **0 · Vision** | Learns your vision, stack, goals, and whether this is new or existing — your choice of a quick **interview** (Anthropic's "let Claude interview you" pattern) or an open **brainstorm** that helps you shape a fuzzy idea first. |
 | **1 · Assess** | Reads your current environment (git state, existing files, installed CLIs, OS) so recommendations fit reality, not a template. |
 | **2 · Git** | Initializes (or adopts) the repo, writes a stack-appropriate `.gitignore`, sets branch conventions, makes a clean first commit. |
 | **3 · Context** | Generates a starter `CLAUDE.md` and `README` from your interview, and lays down a project structure a real engineer would respect. |
