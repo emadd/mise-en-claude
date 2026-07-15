@@ -1,5 +1,5 @@
 ---
-description: Write a clean hand-off of the current session state to a durable artifact (a GitHub issue or HANDOFF.md) so a fresh session resumes losslessly.
+description: Write a clean hand-off of the current session state to a durable artifact (the project's task tracker, a GitHub issue, or HANDOFF.md) so a fresh session resumes losslessly.
 argument-hint: [optional focus, e.g. "the auth refactor"]
 ---
 
@@ -22,8 +22,12 @@ Write these six fields, tight and specific (focus: **$ARGUMENTS** if given):
 
 **Pick the durable target, most-programmatic first:**
 
-- If `gh` is authenticated and the repo has a remote, **open a GitHub issue** (`gh issue create`) —
-  it's shared, linkable, and survives the machine. Label it `handoff`.
+- Check `.mise/state.json` for a `tracker` the project was set up with. If it names a platform
+  other than GitHub Issues (Jira, Linear, Asana, Trello, etc.) and it's reachable this session
+  (MCP/API/CLI), **write the hand-off there** — a task or comment tagged `handoff` — so it lives
+  where the rest of the project's work already does.
+- Otherwise, if `gh` is authenticated and the repo has a remote, **open a GitHub issue**
+  (`gh issue create`) — it's shared, linkable, and survives the machine. Label it `handoff`.
 - Otherwise write **`HANDOFF.md`** at the repo root. If you commit it, honor any no-auto-commit
   rule: ask first, then run the commit yourself on a yes — don't hand over a command to type.
 - Never leave the hand-off only in chat; chat is the thing about to be lost.
