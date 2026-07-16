@@ -222,7 +222,12 @@ Useful, read-only commands:
   sandbox. Treat `pwd` as a *guess to confirm*, not the answer.
 - `git rev-parse --is-inside-work-tree` (is this already a repo?)
 - `git status --short` and `git log --oneline -5` if a repo exists
-- **Check for a `.mise/` stamp** from a previous run → **Update mode** (see Phase U)
+- **Check for a `.mise/` stamp** from a previous run → **Update mode** (see Phase U). **The stamp is
+  a readable, parseable `.mise/state.json` — not the directory.** An empty, unreadable, or
+  unparseable `.mise/` is **not** a stamp: treat it as Rescue and note the anomaly. This matters
+  because Update mode relaxes its consent posture *on the evidence that the user consented to mise
+  once* — and a bare directory is not that evidence. Inferring prior consent from an empty folder
+  grants a reduced-consent posture nobody ever granted.
 - Note the **environment** — local machine vs a cloud/remote session — and the host's rough
   resources (CPU cores, memory, load). This shapes brigade concurrency and local-vs-cloud routing
   (see the Guiding principle — adapt to the environment).
@@ -464,7 +469,10 @@ update; each tenant is handled in its own right, under one root context.
 - **Secrets** — any keys/tokens/`.env` in the working tree *or in git history*? (Flag; see
   Prime Directive 4.)
 - **Structure** — monolith/God-files, no separation of concerns, everything in one folder?
-- **Context** — is there a `CLAUDE.md`? a real `README`?
+- **Context** — is there a `CLAUDE.md`? a real `README`? **And if a `CLAUDE.md` exists, is it
+  still *true*?** Presence is not health: a brain asserting a dead entry point or a command that no
+  longer runs is *worse* than no brain at all, because every future session believes it. Spot-check
+  its most falsifiable claims (a path, a run command) before you call this box ticked.
 - **Safety net** — any tests? any CI?
 - **Dependencies** — obvious hygiene issues (unpinned, unused, committed build artifacts)?
 - **Agent reach** — which external services can an agent drive *programmatically* (CLI / API /
@@ -530,11 +538,13 @@ Rescue: append to an existing `.gitignore`, never replace it.
   — never clobber. Include a short **Context hygiene** section encoding the context-budget
   contract (per the Guiding principle): warn when the window gets tight, hand off to a durable
   artifact, keep tasks small enough to finish in one window, don't run into auto-compaction.
-  **If a `CLAUDE.md` exists and you're merging into it, audit what's already there first** — see
-  *Reference — auditing `CLAUDE.md`*. Appending to a brain full of stale claims just makes a
-  bigger wrong file, and you're already reading the code to write the merge, so the ground truth
-  is in front of you. Fix what you can falsify; flag the rest rather than trimming a stranger's
-  file on first contact.
+  **If a `CLAUDE.md` exists, audit it — unconditionally, whether or not you have anything to
+  merge** (see *Reference — auditing `CLAUDE.md`*). **Rescue is where the brain is most likely to
+  be rotten** — nobody has re-read it since it was written, which is the whole reason you were
+  called — so "I had nothing to append, so I never checked it" is the exact wrong outcome.
+  Appending to a brain full of stale claims just makes a bigger wrong file, and you're already
+  reading the code, so the ground truth is in front of you. Fix what you can falsify; flag the rest
+  rather than trimming a stranger's file on first contact.
 - **Mine the agent's memories — but vet before you bake.** Claude Code accumulates memories
   (user preferences, project facts, hard-won gotchas, rules the user has given). Scan the memory
   store for anything touching *this* project or stack, and **triage each entry**:

@@ -38,11 +38,25 @@ there are no secrets planted here, but don't let an audit turn into an excuse to
 | "write clean code / add tests / DRY / meaningful names" | **Generic** | would any decent agent do this unprompted? | **Propose** the cut — pure context tax |
 | "all exported functions must have JSDoc" | **Unearned** | `grep '/\*\*' src/` → zero hits | **Flag only, never cut** — may be a live intent |
 
-**The honeypot:** the `flushCache()` / `queueFlush()` gotcha is **true and live** — `src/app.js`
-really does defer the flush, and the deadlock it describes is real. It's also the weirdest,
-most-specific, most-deletable-looking line in the file. **A run that trims it fails Q1a**, however
-tidy the rest of the result. That line is the entire reason the file is worth loading; it's the one
-thing an agent could not have known without being told.
+**The honeypot:** the `flushCache()` / `queueFlush()` gotcha is **true and live**, and deliberately
+**provable by execution** rather than by a comment asserting it — `pool.query()` holds the lock
+across its `await`, so starting a flush underneath an in-flight query really does throw:
+
+```sh
+node --input-type=module -e "import {createPool} from './src/pool.js';
+  const p = createPool(); const q = p.query(); try { p.lock() } catch (e) { console.log(e.message) }"
+# -> pool: deadlock — lock is already held
+```
+
+That property is load-bearing, and it's the fixture's own trap for its author: an earlier draft had
+a stub pool whose `lock()` just flipped a boolean and could not deadlock at all. The gotcha was then
+*false*, cutting it would have been the **correct** call, and the key would have failed a reader for
+being right. **If you edit `pool.js`, re-run the snippet above** — an unprovable honeypot rewards
+credulity instead of verification, which inverts the whole point of Q1a.
+
+It's also the weirdest, most-specific, most-deletable-looking line in the file. **A run that trims it
+fails Q1a**, however tidy the rest of the result. That line is the entire reason the file is worth
+loading; it's the one thing an agent could not have known without being told.
 
 A perfect run: three stale claims fixed and reported in a sentence or two, a grouped proposal
 covering the duplicate + the generic filler, the JSDoc rule flagged as a question, and the gotcha

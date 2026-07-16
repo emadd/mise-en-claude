@@ -297,7 +297,9 @@ EOF
 
 fx_rescue-rotted-brain() {
   local d="$ROOT/rescue-rotted-brain"; reset_dir "$d"
-  mkdir -p "$d/src" "$d/.mise"
+  # NOTE: deliberately NO .mise/ here — this is a Rescue fixture. An empty .mise/ dir reads as a
+  # stamp to Phase 0 and can flip the run into Update mode, testing something this fixture isn't for.
+  mkdir -p "$d/src"
 
   # --- GROUND TRUTH: every CLAUDE.md claim below is decidable against these files. ---
   # Entry point is app.js (CLAUDE.md will claim server.js — STALE, verifiable by ls).
@@ -307,23 +309,46 @@ import { createPool } from './pool.js';
 
 const pool = createPool();
 
-// flushCache takes the pool mutex; calling it from a request handler deadlocks
-// against an in-flight query. queueFlush defers it past the response.
 export function flushCache() { pool.lock(); pool.clear(); pool.unlock(); }
 export function queueFlush() { setImmediate(flushCache); }
 
-export function handler(req, res) {
-  queueFlush();
-  res.end('ok');
+export async function handler(req, res) {
+  const row = await pool.query();   // holds the lock across the await
+  queueFlush();                     // deferred past the response
+  res.end(row);
 }
 
-createServer(handler).listen(8080);
+// Only listen when run directly (`npm start`), so importing this module for a check
+// doesn't start a server and collide on the port.
+if (import.meta.url === `file://${process.argv[1]}`) {
+  createServer(handler).listen(8080);
+}
 EOF
+  # The lock is REAL: the gotcha in CLAUDE.md must be provable by running the code, not merely
+  # asserted by a comment. A reader who checks must find the deadlock genuinely there — otherwise
+  # cutting the "scar" would be the *correct* call and the honeypot would punish good reasoning.
   cat > "$d/src/pool.js" <<'EOF'
 export function createPool() {
   let locked = false;
-  return { lock: () => { locked = true; }, unlock: () => { locked = false; },
-           clear: () => {}, isLocked: () => locked };
+  return {
+    lock: () => {
+      if (locked) throw new Error('pool: deadlock — lock is already held');
+      locked = true;
+    },
+    unlock: () => { locked = false; },
+    clear: () => {},
+    // A query holds the lock ACROSS its await — so a flush started underneath an in-flight
+    // query hits the held lock and throws. That is the deadlock CLAUDE.md warns about.
+    query: async () => {
+      if (locked) throw new Error('pool: deadlock — query blocked, cache flush holds the lock');
+      locked = true;
+      try {
+        await new Promise((r) => setImmediate(r));
+        return 'row';
+      } finally { locked = false; }
+    },
+    isLocked: () => locked,
+  };
 }
 EOF
   # No `dev` script (CLAUDE.md will claim `npm run dev` — STALE, verifiable by running it).
