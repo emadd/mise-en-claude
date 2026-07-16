@@ -193,7 +193,8 @@ Snapshot ──► Audit (health report) ──► Triage (severity-ranked) ─�
    3. **Structure** — *propose* (never force) a reorganization; splits and moves are diffs.
    4. **Context** — generate `CLAUDE.md` + `README` **by reading the existing code** (the
       highest-leverage single act: every future session gets smarter immediately).
-   5. **Workflow** — skills, `/mise-cook`, GitHub Issues, CI.
+   5. **Workflow** — skills, `/mise-cook`, the chosen task tracker (their platform, or GitHub
+      Issues by default), CI.
 4. **Preserve the work, always.** Reorg via `git mv` (history preserved); no file is deleted;
    no big-bang rewrite; risky changes land as reviewable diffs/PRs.
 5. **Committed-secrets fork, handled responsibly.** If keys are in git *history*, the honest fix
@@ -216,7 +217,7 @@ triggered when Phase 0 finds a `.mise/` stamp.
 ```json
 { "miseVersion": "…", "miseCommit": "…", "appliedAt": "…", "mode": "greenfield|rescue|update",
   "stack": "…", "expectedModel": "…", "phasesApplied": [], "skills": [], "connectors": [],
-  "repoRawUrl": "…" }
+  "tracker": "github-issues|jira|linear|asana|trello|…", "repoRawUrl": "…" }
 ```
 
 **Update flow:**
@@ -252,7 +253,7 @@ Read stamp ──► Fetch latest (repoRawUrl) ──► Snapshot ──► Reco
 | **04 Connections** | stack module | MCP connector config | skip already-wired | add missing only |
 | **05 CLI tools** | assess | installs/points to `gh` etc. | skip if on PATH | verify + fill gaps |
 | **06 Skills+shortcuts** | stack module | Skills + slash commands incl. `/mise-cook` | skip installed | add missing only |
-| **07 Persistence** | repo, `gh` | GitHub Issues labels/templates, workflow doc | skip if configured | augment |
+| **07 Persistence** | repo, `gh`, Phase 1's tracker answer | task tracker setup — the named platform's MCP/API/CLI, or GitHub Issues labels/templates by default — plus workflow doc | skip if configured | augment |
 
 Each phase module is a small markdown spec: **Goal → Preconditions → Steps (with the exact
 commands/edits) → Consent points → Idempotency rule → Verification.** Claude executes it; the

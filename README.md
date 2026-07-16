@@ -15,7 +15,8 @@
 `mise` is a paste-in prompt for [Claude Code](https://claude.com/claude-code) that interviews
 you about your project and then stands up (or upgrades) a real engineering foundation for it:
 git, a `CLAUDE.md`, a sane project structure, the right connectors and CLI tools, workflow
-skills like `/mise-cook`, and GitHub Issues as your workflow's memory. Stop fiddling with
+skills like `/mise-cook`, and a task tracker — yours if you already have one, GitHub Issues if not
+— as your workflow's memory. Stop fiddling with
 setup and *start building*.
 
 It's the foundation a seasoned engineer would lay before writing a line of feature code: the
@@ -95,14 +96,14 @@ skip any phase. Nothing is installed or written without your yes.
 
 | Phase | What it does |
 |---|---|
-| **0 · Vision** | Learns your vision, stack, goals, and whether this is new or existing — your choice of a quick **interview** (Anthropic's "let Claude interview you" pattern) or an open **brainstorm** that helps you shape a fuzzy idea first. |
+| **0 · Vision** | Learns your vision, stack, goals, whether this is new or existing, and whether you already use a task tracker — your choice of a quick **interview** (Anthropic's "let Claude interview you" pattern) or an open **brainstorm** that helps you shape a fuzzy idea first. |
 | **1 · Assess** | Reads your current environment (git state, existing files, installed CLIs, OS) so recommendations fit reality, not a template. |
 | **2 · Git** | Initializes (or adopts) the repo, writes a stack-appropriate `.gitignore`, sets branch conventions, makes a clean first commit. |
 | **3 · Context** | Generates a starter `CLAUDE.md` and `README` from your interview, and lays down a project structure a real engineer would respect. |
 | **4 · Connections** | Wires **programmatic access** (MCP / API / CLI) to the services your project touches, so agents can *operate* them, not just read about them. |
 | **5 · CLI + tools** | Sets up `gh` and the other CLIs your workflow leans on; prefers a CLI/API over any dashboard, and flags browser-only bottlenecks. |
 | **6 · Skills + shortcuts** | Installs the workflow Skills and slash commands, including **`/mise-cook`**, the kitchen-brigade multi-agent workflow. |
-| **7 · Persistence** | Wires GitHub Issues + git as your workflow's durable memory, so context survives between sessions. |
+| **7 · Persistence** | Wires your preferred task tracker (Jira, Linear, Asana, Trello — or GitHub Issues if you have none) + git as your workflow's durable memory, so context survives between sessions. |
 | **8 · Verify + hand off** | Confirms everything works and hands you a first command to run. You're building in minutes, not hours. |
 
 **Existing project?** `mise` detects it and runs in **Rescue mode** (see below).
