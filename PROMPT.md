@@ -376,7 +376,26 @@ project-local reconciliation does not.)
    (where the project diverged — **assume it's intentional**, flag don't judge), 🗑 Deprecated. **If
    nothing meaningful changed and they're current, say so plainly and stop.** A near-no-op update is
    the honest, calm outcome — not a reason to manufacture a menu.
-5. **Bring the workflow commands current — just do the safe part.** Check `.claude/commands/`
+5. **Audit `CLAUDE.md` against reality — then offer to reconcile and trim.** The project's brain
+   is the one file that rots *silently*: it's written once, loaded into every session forever, and
+   never re-read by a human. A stale line there isn't inert — it actively misinforms every future
+   agent, and every surplus line is a tax on every session's context budget (per the Guiding
+   principle). So on Update, **read `CLAUDE.md` and verify its claims against the code, the
+   `README`, and the rest of `docs/`** — see *Reference — auditing `CLAUDE.md`* for the method and
+   the four rot classes. **Do the verification yourself; bring the human the findings, not the
+   homework.** Then:
+   - **Fix the falsifiable stuff yourself and report it in a line** — a renamed script, a moved
+     path, a dead flag, a command that no longer runs. You verified it against the code; the
+     correction isn't a judgment call, and asking about it is just narrating.
+   - **Ask before you cut.** Trimming is where you *propose*. `CLAUDE.md` is the user's authored
+     file — a line you read as bloat may be a scar from an outage you can't see. Group findings
+     into a few real decisions ("these 5 sections duplicate the `README` — replace with a link?"),
+     never a line-by-line checkbox cart. Show the diff, name the reason and the cost, take the call.
+   - **Never delete a rule you merely think is unnecessary.** Stale-and-verified (the file it names
+     is gone) is a fact. Unearned-and-suspected is an opinion — flag it, let them prune it.
+   - **A clean audit is a real result.** If the brain is accurate and tight, say so in a sentence
+     and move on. Don't manufacture a trim to look useful.
+6. **Bring the workflow commands current — just do the safe part.** Check `.claude/commands/`
    (project) and `~/.claude/commands/` (global) against the current set (`/mise-cook`, `/mise-clean`,
    `/mise-handoff`). **Do the obvious safe things without asking item-by-item:** migrate pre-rename
    `/orchestrate`→`/mise-cook` and `/handoff`→`/mise-handoff` (install the new name, back up the old);
@@ -386,11 +405,11 @@ project-local reconciliation does not.)
    covers** — if they have their own hand-off convention, note `/mise-handoff` is redundant and don't
    install it. *Ask* only for a real conflict (a command they customized that you'd change) or a
    higher-tier target (global `~/.claude`). No shopping cart.
-6. **Do the reconciliation, then report the result.** Apply the safe, non-destructive changes
+7. **Do the reconciliation, then report the result.** Apply the safe, non-destructive changes
    yourself (merge/append, `git mv`, refreshed guidance) and summarize what you did in a line or two.
    Where the user **clearly customized** something on purpose, *that's* where you pause and ask "keep
    yours or adopt?" — a deliberate customization is a real decision; a routine merge is not.
-7. **Re-stamp and finish (Phase 9).** Update the `.mise/` stamp to the new version — **silent
+8. **Re-stamp and finish (Phase 9).** Update the `.mise/` stamp to the new version — **silent
    bookkeeping, never a choice you offer** (nobody wants a stale stamp). Verify, and hand back a
    one-line summary of what the update actually changed.
 
@@ -511,6 +530,11 @@ Rescue: append to an existing `.gitignore`, never replace it.
   — never clobber. Include a short **Context hygiene** section encoding the context-budget
   contract (per the Guiding principle): warn when the window gets tight, hand off to a durable
   artifact, keep tasks small enough to finish in one window, don't run into auto-compaction.
+  **If a `CLAUDE.md` exists and you're merging into it, audit what's already there first** — see
+  *Reference — auditing `CLAUDE.md`*. Appending to a brain full of stale claims just makes a
+  bigger wrong file, and you're already reading the code to write the merge, so the ground truth
+  is in front of you. Fix what you can falsify; flag the rest rather than trimming a stranger's
+  file on first contact.
 - **Mine the agent's memories — but vet before you bake.** Claude Code accumulates memories
   (user preferences, project facts, hard-won gotchas, rules the user has given). Scan the memory
   store for anything touching *this* project or stack, and **triage each entry**:
@@ -708,6 +732,44 @@ readable, and committed. A minimal shape (adapt as needed):
 - The stamp records *intent* (what mise applied), so "drift" = current reality minus stamped
   intent. That's how Phase U tells a deliberate customization from bit-rot: if it isn't in the
   stamp, mise didn't do it — treat it as the user's, and ask before changing it.
+
+## Reference — auditing `CLAUDE.md`
+
+Every other doc is read by a human who notices when it's wrong. `CLAUDE.md` is read by an agent
+that *believes it*. That asymmetry is the whole reason to audit: a wrong line in a `README`
+confuses one person once; a wrong line in `CLAUDE.md` misleads every session until someone looks.
+And because the file is loaded in full, every session, **length is a recurring cost** — the only
+doc in the repo where trimming is a feature, not tidiness.
+
+**The four rot classes.** Sort each finding — the class determines who decides:
+
+| Class | What it looks like | Verify by | Who calls it |
+|---|---|---|---|
+| **Stale** | Names a file, script, flag, or command that changed or vanished | Check the code — does the path exist? does the command run? | **You** — it's falsifiable |
+| **Duplicated** | Restates the `README` / `ARCHITECTURE` / a stack doc, now drifted from it | Diff the claims; the doc is the source of truth | **Ask** — propose a link |
+| **Generic** | Advice any competent model already has ("write tests", "use types", "handle errors") | Would a good agent do this *without* being told? | **Ask** — pure context tax |
+| **Unearned** | A rule the code doesn't actually follow | Grep for compliance — is it convention or aspiration? | **Ask, never cut** — may be a live intent |
+
+**How to run it:**
+
+1. **Read `CLAUDE.md` whole**, then extract its *claims* — each imperative, path, command, and
+   convention it asserts. That list, not the prose, is what you audit.
+2. **Test the falsifiable claims against ground truth.** A claim naming a path, script, or command
+   is checkable — so check it (`ls`, run it, grep for the symbol). Don't reason about whether it's
+   probably still true; the file was written to be believed, so verify it like you'd verify a test.
+3. **Diff the rest against the docs.** Anything `README`/`ARCHITECTURE`/`docs/` already covers is
+   a duplicate with a second copy to drift — propose replacing it with a one-line pointer.
+4. **Weigh the cut by what it costs to be wrong.** A wrong trim silently removes a guardrail and
+   nobody notices until it bites; a wrong keep costs some tokens. That asymmetry is why the
+   default is *keep and flag*, and why "I don't see why this is here" is a reason to ask, not cut.
+5. **Report the shape, not the inventory.** "Three stale paths (fixed), one section duplicating
+   the README, ~40% of the file is advice Claude already has" beats a 30-row table. Lead with what
+   you changed and what you want a call on.
+
+**The failure mode to avoid:** an over-eager trim that strips the hard-won gotchas — the very
+lines with the highest value-per-token in the file — because they read as odd one-offs out of
+context. A weird, specific rule is *evidence of a scar*. Treat oddness as a signal to ask, not
+to delete.
 
 ## Reference — context-safe auditing & remediation
 

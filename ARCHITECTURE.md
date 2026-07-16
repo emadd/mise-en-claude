@@ -224,9 +224,9 @@ triggered when Phase 0 finds a `.mise/` stamp.
 
 ```
 Read stamp ──► Fetch latest (repoRawUrl) ──► Snapshot ──► Reconcile report ──► Apply w/ consent ──► Re-stamp
-                     │                                        │
-              git pull / gh /                     🆕 new  🔀 drifted  🗑 deprecated
-              WebFetch / curl                     (drift may be intentional)
+                     │                            │           │
+              git pull / gh /            audit CLAUDE.md   🆕 new  🔀 drifted  🗑 deprecated
+              WebFetch / curl            vs. code + docs   (drift may be intentional)
 ```
 
 **Key properties:**
@@ -241,6 +241,12 @@ Read stamp ──► Fetch latest (repoRawUrl) ──► Snapshot ──► Reco
   rewrites history.
 - **Idempotent** — reconciling an already-current project is a clean no-op that just confirms
   you're up to date.
+- **The brain gets audited, not just the tooling.** Update reconciles `CLAUDE.md` against the code
+  and docs, because that file is loaded into every session and read by an agent that believes it —
+  so staleness there costs more than anywhere else, and length costs on every run. Falsifiable rot
+  (a dead path, a renamed script) is fixed and reported; trims are *proposed*, since an authored
+  rule may encode a scar mise can't see. Same asymmetry as everywhere else in mise: a wrong cut
+  removes a guardrail silently, a wrong keep costs tokens.
 
 ---
 
@@ -249,7 +255,7 @@ Read stamp ──► Fetch latest (repoRawUrl) ──► Snapshot ──► Reco
 | Phase | Reads | Writes / installs | Idempotency check | Convert-mode behavior |
 |---|---|---|---|---|
 | **02 Git** | git state | `git init`, `.gitignore`, branch config, first commit | skip if repo exists | adopt repo; append `.gitignore`; never rewrite history |
-| **03 Context** | interview, stack | `CLAUDE.md`, `README.md`, structure | skip if present | **merge/append** into existing `CLAUDE.md`; propose structure diffs |
+| **03 Context** | interview, stack, existing `CLAUDE.md` + docs | `CLAUDE.md`, `README.md`, structure | skip if present | **audit then merge/append** into existing `CLAUDE.md` (fix falsifiable rot, propose trims); propose structure diffs |
 | **04 Connections** | stack module | MCP connector config | skip already-wired | add missing only |
 | **05 CLI tools** | assess | installs/points to `gh` etc. | skip if on PATH | verify + fill gaps |
 | **06 Skills+shortcuts** | stack module | Skills + slash commands incl. `/mise-cook` | skip installed | add missing only |

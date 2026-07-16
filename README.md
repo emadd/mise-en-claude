@@ -201,6 +201,13 @@ This tool modifies your environment, so it behaves like a disciplined engineer, 
   cloud-adaptive**: it prefers local dev, but if you start in the cloud it does the portable work
   there and hands the local-only parts (native builds, simulators, signing) back to a local
   session.
+- **Audits the brain you already have.** `CLAUDE.md` is the one file written once and then read by
+  every future session — which is exactly why it rots unnoticed, and why every stale line quietly
+  misinforms every agent that follows. On an update, mise re-reads it against your actual code and
+  docs: it fixes what it can prove wrong (a renamed script, a path that moved), and shows you what
+  it thinks is dead weight — sections your `README` already says, advice Claude already knows —
+  with the diff and the reason. It fixes facts on its own; it asks before it cuts, because a rule
+  that looks strange is usually a scar from something that bit you.
 - **Meets you at your level.** It asks how comfortable you are and calibrates: plain language by
   default, jargon only where it helps. It leads with the short version and layers the detail on
   request, so what you get back is something you can actually absorb, not a wall of text.

@@ -103,7 +103,9 @@ Every run — human or agent — reports these sections:
 3. **SNAPSHOT** — exactly what established the recovery point, in order, with the git commands.
 4. **SECRETS** — findings as `path:line` + type only (never plaintext), plus the detection
    method and how any mixed-content config file was handled.
-5. **CLAUDE.md** — written? code-derived vs template? (paste it).
+5. **CLAUDE.md** — written? code-derived vs template? (paste it). If one already existed: was it
+   **audited** — which claims were checked against the code and *how* (the actual `ls`/grep/run),
+   what was fixed vs. proposed, and was any trim proposed that the run hadn't verified?
 6. **ACTIONS TAKEN vs WOULD-DO** — executed vs deferred, plus each consent point and the choice.
 7. **FRICTION / BUGS** — where `PROMPT.md` was ambiguous, contradictory, led the reader wrong,
    or risked an unsafe act. Blunt. This is the feedstock for the next prompt edit.
