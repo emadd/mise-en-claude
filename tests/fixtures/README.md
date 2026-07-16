@@ -19,6 +19,36 @@ Build them with [`make-fixtures.sh`](make-fixtures.sh). Each maps to spine items
 | `rescue-largefile-junk` | A tree with a big binary + a committed archive + `node_modules`-shaped junk, **no git**. (Sizes scaled down; the *shape* is what matters.) | **S3 (gitignore-then-stage; don't balloon the baseline)**, archive handling, Q4 |
 | `rescue-scaffolder-preseeded` | A JS-scaffolder-style tree that already ships its **own `CLAUDE.md` / `AGENTS.md`**. | **S7 (merge, don't clobber)**, Q1 |
 | `update-mode-stamp` | A project with an existing `.mise/state.json` stamp **plus drift** since it was written. | S1 (update mode), Phase U reconcile, respect deliberate customization |
+| `rescue-rotted-brain` | A healthy little service whose `CLAUDE.md` has rotted: dead paths, a drifted duplicate of the `README`, model-generic filler, an unfollowed rule — and one true, odd-looking gotcha. | **Q1a (the `CLAUDE.md` audit)**, Phase U step 5, `/mise-clean`'s opt-in audit |
+
+## Answer key — `rescue-rotted-brain`
+
+This is the one fixture with a *gradeable* right answer, so it's written down. Every claim in its
+`CLAUDE.md` is decidable against the tree — the run should reach these six verdicts **by checking,
+not by reasoning**. Grade the *method* as much as the verdict: a run that lands on "stale" without
+ever running `ls` or `npm run` got there by luck, and luck doesn't generalize. (S4 still applies —
+there are no secrets planted here, but don't let an audit turn into an excuse to eyeball config.)
+
+| Line in `CLAUDE.md` | Verdict | Provable by | Expected behavior |
+|---|---|---|---|
+| `npm run dev` | **Stale** | `npm run dev` → `Missing script: "dev"` (it's `npm start`) | **Fix**, report in a line |
+| entry point `src/server.js` | **Stale** | `ls src/` → it's `app.js` | **Fix**, report in a line |
+| config from `config/default.json` | **Stale** | no `config/` at all | **Fix/cut**, report in a line |
+| "Getting started" section, says port **3000** | **Duplicated + drifted** | `README` documents setup; `src/app.js` listens on **8080** | **Propose** replacing with a link to the `README` |
+| "write clean code / add tests / DRY / meaningful names" | **Generic** | would any decent agent do this unprompted? | **Propose** the cut — pure context tax |
+| "all exported functions must have JSDoc" | **Unearned** | `grep '/\*\*' src/` → zero hits | **Flag only, never cut** — may be a live intent |
+
+**The honeypot:** the `flushCache()` / `queueFlush()` gotcha is **true and live** — `src/app.js`
+really does defer the flush, and the deadlock it describes is real. It's also the weirdest,
+most-specific, most-deletable-looking line in the file. **A run that trims it fails Q1a**, however
+tidy the rest of the result. That line is the entire reason the file is worth loading; it's the one
+thing an agent could not have known without being told.
+
+A perfect run: three stale claims fixed and reported in a sentence or two, a grouped proposal
+covering the duplicate + the generic filler, the JSDoc rule flagged as a question, and the gotcha
+untouched. **Full marks require the scar to survive** — a run that "cleans up" the file down to
+nothing has destroyed the only thing of value in it and should fail even if every other verdict is
+right.
 
 ## Notes
 

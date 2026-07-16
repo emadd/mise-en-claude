@@ -79,6 +79,7 @@ model** — so the rubric is model-agnostic and every run should be graded, not 
 - **FAIL:** A generic template that would fit any project of that stack.
 
 ### Q1a — The `CLAUDE.md` audit is verified, not vibed
+*Fixture: `rescue-rotted-brain` (answer key in [`fixtures/README.md`](fixtures/README.md)).*
 - **PASS (update / rescue-with-existing-brain):** Claims in `CLAUDE.md` are checked against
   ground truth — a named path is `ls`'d, a named command is run or grepped for — and stale ones
   are *fixed and reported*. Duplication with the `README`/`ARCHITECTURE` and model-generic advice

@@ -34,6 +34,7 @@ FIXTURES=(
   "rescue-largefile-junk|Big binary + archive + node_modules junk, no git (S3 don't balloon)"
   "rescue-scaffolder-preseeded|JS scaffolder that ships its own CLAUDE.md/AGENTS.md (S7 merge)"
   "update-mode-stamp|Existing .mise stamp + drift (S1 update mode, Phase U reconcile)"
+  "rescue-rotted-brain|CLAUDE.md w/ all 4 rot classes + a scar rule that must survive (Q1a audit)"
 )
 
 note()      { printf '  %s\n' "$*"; }
@@ -292,6 +293,102 @@ EOF
   git_here "$d" commit -q -m "hand-added zod (drift the owner made themselves)"
   note ".mise/state.json (mise 0.1.0) + drift: hand-customized CLAUDE.md, hand-added dep"
   note "  exercises Update-mode detection + Phase U reconcile that respects deliberate customization"
+}
+
+fx_rescue-rotted-brain() {
+  local d="$ROOT/rescue-rotted-brain"; reset_dir "$d"
+  mkdir -p "$d/src" "$d/.mise"
+
+  # --- GROUND TRUTH: every CLAUDE.md claim below is decidable against these files. ---
+  # Entry point is app.js (CLAUDE.md will claim server.js — STALE, verifiable by ls).
+  cat > "$d/src/app.js" <<'EOF'
+import { createServer } from 'node:http';
+import { createPool } from './pool.js';
+
+const pool = createPool();
+
+// flushCache takes the pool mutex; calling it from a request handler deadlocks
+// against an in-flight query. queueFlush defers it past the response.
+export function flushCache() { pool.lock(); pool.clear(); pool.unlock(); }
+export function queueFlush() { setImmediate(flushCache); }
+
+export function handler(req, res) {
+  queueFlush();
+  res.end('ok');
+}
+
+createServer(handler).listen(8080);
+EOF
+  cat > "$d/src/pool.js" <<'EOF'
+export function createPool() {
+  let locked = false;
+  return { lock: () => { locked = true; }, unlock: () => { locked = false; },
+           clear: () => {}, isLocked: () => locked };
+}
+EOF
+  # No `dev` script (CLAUDE.md will claim `npm run dev` — STALE, verifiable by running it).
+  # No JSDoc anywhere in src/ (CLAUDE.md will mandate it — UNEARNED, verifiable by grep).
+  cat > "$d/package.json" <<'EOF'
+{ "name": "acme-rotted", "version": "2.0.0", "type": "module",
+  "scripts": { "start": "node src/app.js", "test": "node --test" } }
+EOF
+  cat > "$d/.gitignore" <<'EOF'
+node_modules/
+.DS_Store
+EOF
+  # README is the source of truth for setup — and says port 8080.
+  cat > "$d/README.md" <<'EOF'
+# acme-rotted
+
+A tiny queue service.
+
+## Getting started
+
+    npm install
+    npm start          # serves on port 8080
+
+Run the tests with `npm test`.
+EOF
+
+  # --- THE ROTTED BRAIN. Each section is one rot class; see fixtures/README.md answer key. ---
+  cat > "$d/CLAUDE.md" <<'EOF'
+# CLAUDE.md — acme-rotted
+
+## Getting started
+
+Install deps with `npm install`, then run `npm run dev` to start the server on
+port 3000. The entry point is `src/server.js`. Config is read from
+`config/default.json` at boot.
+
+## Architecture
+
+The service exposes one handler and a connection pool.
+
+## Conventions
+
+Write clean, readable code. Add tests for new behavior. Handle errors properly
+and use meaningful variable names. Prefer small functions over large ones.
+Don't repeat yourself.
+
+All exported functions must have JSDoc comments.
+
+## Gotchas
+
+Never call `flushCache()` inside a request handler — it takes the pool mutex and
+deadlocks against any in-flight query. Use `queueFlush()` instead.
+EOF
+
+  git_here "$d" init -q
+  git_here "$d" add -A
+  git_here "$d" commit -q -m "acme-rotted: service + brain that has since rotted"
+
+  note "CLAUDE.md planted with all four rot classes, each decidable against the tree:"
+  note "  STALE      npm run dev / src/server.js / config/default.json — none exist (ls, npm run)"
+  note "  DUPLICATED 'Getting started' restates README *and drifted*: says :3000; app.js listens on :8080"
+  note "  GENERIC    'write clean code / add tests / DRY' — advice the model already has"
+  note "  UNEARNED   'all exported functions must have JSDoc' — src/ has zero (grep); FLAG, don't cut"
+  note "  SCAR       the flushCache/queueFlush gotcha is TRUE and live (src/app.js) — must survive"
+  note "  exercises Q1a: verify-before-declaring, fix-facts/propose-trims, don't strip the scar"
 }
 
 # --------------------------------------------------------------------------------------------
