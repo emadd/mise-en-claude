@@ -637,6 +637,20 @@ ready to build the auth flow, try `/mise-cook implement login + signup, wired to
 User model`" rather than just "`/mise-cook` runs a multi-agent workflow." A name and a one-line
 pitch don't teach usage; a worked example tied to their own work does — and it costs one line.
 
+**Teach the commands in the conversation — do NOT advertise them in `CLAUDE.md`.** A line like
+"use `/mise-cook` for multi-part work" or "run `/mise-handoff` before the window fills" does not
+belong in the project brain, and writing one there is a self-inflicted version of the exact rot the
+audit removes (*Reference — auditing `CLAUDE.md`*). It's **duplicated** — the installed command in
+`.claude/commands/` already declares it exists, the harness lists available commands to the agent,
+and *when* to reach for each one lives in the command's own prompt, which loads when it runs — and
+it's a **permanent context tax**, since `CLAUDE.md` is read every session forever. mise auditing
+this bloat out of everyone's files while injecting its own is incoherent and self-serving; don't.
+**The one thing that does earn a `CLAUDE.md` line is a project-specific workflow *constraint*** the
+command can't know about itself — "builds here are heavy, cap `/mise-cook` at 2 concurrent
+stations," "this repo's hand-off convention is a GitHub issue, not `HANDOFF.md`." The trigger is a
+non-obvious project fact about the workflow, **never** the existence of the workflow. When in doubt,
+teach it live and leave the brain alone.
+
 **If Phase 2 deferred real remediation work to the kitchen, don't just describe it — offer to
 fire it now.** Walk the user to the actual findings you flagged as cook-sized (the God-file
 split, the missing test suite, whatever it was), propose them as stations (what's separable, what
