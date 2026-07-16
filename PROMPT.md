@@ -610,7 +610,10 @@ context-budget contract from the Guiding principle: warn, offer hand-off, refuse
 Include **`/mise-clean`** too — a **real vendored command** (`commands/mise-clean.md`, fetched from
 `https://raw.githubusercontent.com/emadd/mise-en-claude/main/commands/mise-clean.md`) — the consent-first,
 non-destructive hygiene sweep: untrack build/junk that slipped into git, clear backup/scratch cruft,
-and prune stale branches and orphaned `mise-cook` worktrees.
+and prune stale branches and orphaned `mise-cook` worktrees. It also carries an **opt-in `CLAUDE.md`
+audit** — the same check Phase U runs (*Reference — auditing `CLAUDE.md`*), available on demand
+between updates, since the brain rots on the project's clock, not mise's release clock. Opt-in
+because it reads the code to verify claims; the other sweeps are cheap file surveys.
 
 When you wire `/mise-cook`, configure it to **size the cook count to the host's resources**
 (cores/memory/load, not a fixed number) and to be **local-first but cloud-adaptive** — handing

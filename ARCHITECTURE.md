@@ -117,7 +117,7 @@ mise/
 ├── commands/                  # slash-command definitions mise can install
 │   ├── mise-cook.md           # the kitchen-brigade /mise-cook command (vendored — built)
 │   ├── mise-handoff.md        # the /mise-handoff session hand-off command (vendored — built)
-│   └── mise-clean.md          # the /mise-clean hygiene-sweep command (vendored — built)
+│   └── mise-clean.md          # the /mise-clean hygiene-sweep command (vendored — built; incl. opt-in CLAUDE.md audit)
 │
 ├── WORKFLOW-ORCHESTRATION.md   # the extended brigade playbook (companion to /mise-cook)
 │

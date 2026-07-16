@@ -68,7 +68,8 @@ cd mise-en-claude && ./install.sh          # installs /mise-cook, /mise-handoff 
 ```
 
 That gives you **`/mise-cook`** (kitchen brigade), **`/mise-handoff`** (session hand-off), and
-**`/mise-clean`** (hygiene sweep), plus the orchestration playbook, globally or per-project. The install is non-destructive and idempotent: it
+**`/mise-clean`** (hygiene sweep — junk in git, scratch files, stale branches, plus an opt-in
+`CLAUDE.md` audit if you ask for one), plus the orchestration playbook, globally or per-project. The install is non-destructive and idempotent: it
 backs up any command file you'd edited before replacing it, and skips files already current.
 
 Still on the roadmap: the re-runnable **`/mise` skill** and the **template library**, so `/mise`
