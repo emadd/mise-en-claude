@@ -1,8 +1,10 @@
 <!-- mise en place: get everything in its place before you cook. -->
 
-# mise
+# mise-en-claude
 
 **Get your project's *mise en place*: everything in its place before you build.**
+(The tool answers to `mise` — the repo is `mise-en-claude` so search engines don't confuse it
+with [jdx/mise](https://github.com/jdx/mise), the dev-tool version manager.)
 
 > ⚠️ **Early, and serious about safety.** The paste-in [`PROMPT.md`](./PROMPT.md) and the
 > `/mise-cook` command work today, and [`stacks/`](./stacks) covers iOS/iPadOS/macOS plus React,
@@ -48,7 +50,7 @@ That's it. `mise` will interview you, show you a plan, and set nothing up until 
 **Don't have the file handy — just this link?** Paste this instead of the full file:
 
 ```
-Read https://raw.githubusercontent.com/emadd/mise/main/PROMPT.md and follow it to set up my project.
+Read https://raw.githubusercontent.com/emadd/mise-en-claude/main/PROMPT.md and follow it to set up my project.
 ```
 
 That's a real instruction to fetch and run it — not the same as just dropping the bare link, which
@@ -60,8 +62,8 @@ Clone the repo and run the installer to put mise's **workflow commands** into yo
 config:
 
 ```sh
-git clone https://github.com/emadd/mise
-cd mise && ./install.sh          # installs /mise-cook, /mise-handoff + /mise-clean for all your projects
+git clone https://github.com/emadd/mise-en-claude
+cd mise-en-claude && ./install.sh          # installs /mise-cook, /mise-handoff + /mise-clean for all your projects
 # or:  ./install.sh --project .  # install into just this project's ./.claude
 ```
 
