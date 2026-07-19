@@ -26,9 +26,11 @@ worktree/branch. Run service on these six moves:
    overlapping work is a handoff: give it to the agent already in that lane, or serialize it
    after that plate lands. Prep trivial single-file fixes yourself instead of briefing a station.
 3. **Right-size the model to the task.** Your *workhorse* model for routine work (most
-   stations); your *strongest* model for genuinely hard or risky execution; your *cheapest* for
-   mechanical prep. **Reserve the most expensive or experimental tier for the human's explicit
-   say-so** — never spin it up unasked.
+   stations); your *strongest* model for genuinely hard or risky execution, including
+   guardrail-sensitive work like security review; your *cheapest* for mechanical prep. Where the
+   tool exposes a reasoning-effort override, right-size *effort* alongside model tier — a second
+   dial, not a substitute. **Reserve the most expensive or experimental tier for the human's
+   explicit say-so** — never spin it up unasked.
 4. **Clean as you go — resource hygiene.** Give each station its own isolated environment
    (worktree + any per-agent scratch/test resources), never shared. Cap concurrent build/test-
    heavy stations to what the host can bear (**size to cores/memory/current load, not a fixed
