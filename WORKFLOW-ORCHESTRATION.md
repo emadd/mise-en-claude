@@ -61,8 +61,12 @@ This is the whole game. Two agents that never touch the same file integrate clea
 ## 3. Right-size the model to the task
 - **Workhorse model** — most stations (routine implementation, layout, assessments).
 - **Strongest model** — genuinely hard or risky *execution* (invariant-critical logic, gnarly
-  reconciliation). The autonomous ceiling.
+  reconciliation, guardrail-sensitive work like security review). The autonomous ceiling.
 - **Cheapest model / inline** — mechanical prep; often just do it yourself.
+- **Effort is a second dial, not a substitute for model tier** — when the tool exposes a
+  reasoning-effort override (e.g. Workflow's `agent()` `opts.effort`), right-size it alongside
+  the model: low for mechanical stations, higher for ones doing real judgment, without
+  necessarily bumping tiers.
 - **Reserve the most expensive or experimental tier for the human's explicit say-so** — a
   common pattern is that tier drafts a hard *plan*, the strong model *executes* it. Never spin
   it up unasked.
