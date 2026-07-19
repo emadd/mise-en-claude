@@ -69,16 +69,18 @@ How the Install Prompt is built.
 
 ## 2. Repo layout
 
-> This is the **target** layout. Built today: `PROMPT.md`, `stacks/`, `commands/` (`mise-cook`,
-> `mise-handoff`, `mise-clean`), `install.sh` (installs the commands), `tests/`, and the top-level docs. Still roadmap
-> (Mode B's fuller half): the re-runnable `/mise` skill, `phases/`, and `templates/`.
+> This is the **target** layout. Built today: `PROMPT.md`, `stacks/`, `commands/` (`mise-init`,
+> `mise-update`, `mise-cook`, `mise-handoff`, `mise-clean`), `install.sh` (installs the commands + a
+> vendored `mise-PROMPT.md`), `tests/`, and the top-level docs. The re-runnable entry point ships as
+> **`/mise-init`** — a thin command that reads the vendored prompt — rather than a separate skill.
+> Still roadmap: `phases/` and `templates/`.
 
 ```
 mise/
 ├── README.md                  # front door (see README.md)
 ├── ARCHITECTURE.md            # this file
 ├── PROMPT.md                  # THE artifact — the paste-in master prompt (Mode A)
-├── install.sh                 # installs the vendored commands (/mise-cook, /mise-handoff, /mise-clean) into Claude Code (Mode B)
+├── install.sh                 # installs the vendored commands (/mise-init, /mise-update, /mise-cook, /mise-handoff, /mise-clean) + mise-PROMPT.md into Claude Code (Mode B)
 ├── LICENSE                    # MIT (proposed)
 │
 ├── phases/                    # one module per setup phase — the prompt @-includes these
@@ -115,6 +117,8 @@ mise/
 │   └── structure/             # per-stack starter directory skeletons
 │
 ├── commands/                  # slash-command definitions mise can install
+│   ├── mise-init.md           # the re-runnable setup/rescue/update entry point (vendored — built; reads mise-PROMPT.md)
+│   ├── mise-update.md         # refreshes the installed commands from published main (vendored — built)
 │   ├── mise-cook.md           # the kitchen-brigade /mise-cook command (vendored — built)
 │   ├── mise-handoff.md        # the /mise-handoff session hand-off command (vendored — built)
 │   └── mise-clean.md          # the /mise-clean hygiene-sweep command (vendored — built; incl. opt-in CLAUDE.md audit)
@@ -294,10 +298,16 @@ couple of templates — **the extensibility story is the community story**, and 
 
 - **Mode A (`PROMPT.md`)** is the canonical artifact — copy/paste, zero install, works on any
   machine with Claude Code.
-- **Mode B (`install.sh`)** installs the vendored **commands** (`/mise-cook`, `/mise-handoff`, `/mise-clean` + the
-  orchestration playbook) into `~/.claude` (or a project's `./.claude`), non-destructively and
-  idempotently — available today. The fuller half (the re-runnable **`/mise` skill** plus the
-  `phases/` + `templates/` it renders from, so `/mise` acts as an updater) is still roadmap.
+- **Mode B (`install.sh`)** installs the vendored **commands** (`/mise-init`, `/mise-update`,
+  `/mise-cook`, `/mise-handoff`, `/mise-clean` + the orchestration playbook) and a vendored
+  **`mise-PROMPT.md`** into `~/.claude` (or a project's `./.claude`), non-destructively and
+  idempotently — available today. **`/mise-init`** is the re-runnable entry point: a thin launcher
+  that reads the vendored `mise-PROMPT.md` (network fetch as fallback) and runs the full
+  setup/rescue/update flow. **`/mise-update`** keeps the install itself current: it clones the
+  published `main` into a throwaway dir and re-runs *that* `install.sh`, so the tool self-updates
+  from the release rather than from whatever working copy is on disk. It ships as a command rather than a separate skill to keep one source of
+  truth — the prompt — with no forked copy to rot. Still roadmap: the `phases/` + `templates/` split
+  the prompt would eventually render from.
 - **Versioning against Claude Code.** Claude Code evolves (new Skills, MCP surface, slash-command
   conventions). `mise` pins a **compatibility note** at the top of `PROMPT.md` and tags releases;
   a `CHANGELOG.md` tracks what changed and why. This is the "living artifact" promise — a reason
@@ -317,8 +327,10 @@ couple of templates — **the extensibility story is the community story**, and 
 ## 8. Open questions
 
 - **Name** — `mise` vs `seed` / `groundwork` / `install-prompt`.
-- **Skill vs prompt as the "real" artifact** — lead with the paste (broadest reach) or the
-  installed skill (best ergonomics)? Current call: paste is canonical, skill is the power path.
+- ~~**Skill vs prompt as the "real" artifact** — lead with the paste (broadest reach) or the
+  installed skill (best ergonomics)?~~ **RESOLVED:** the paste (`PROMPT.md`) is canonical; the
+  installed power path is **`/mise-init`**, a thin command that *reads* the vendored prompt rather
+  than a separate skill that forks it — so there is exactly one source of truth to maintain.
 - ~~**How much to vendor vs reference** — ship a copy of `/mise-cook`, or fetch it?~~
   **RESOLVED: vendored** as `commands/mise-cook.md` + `WORKFLOW-ORCHESTRATION.md` (a
   self-contained slash command + its extended playbook). Simpler for users; no external fetch.
