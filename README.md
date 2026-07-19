@@ -11,7 +11,8 @@ with [jdx/mise](https://github.com/jdx/mise), the dev-tool version manager.)
 > Next.js, Angular, Flutter, React Native, and three backends. The safety behavior is validated by
 > a QA harness that runs `mise` against synthetic projects on more than one model (see
 > [Proven on itself](#proven-on-itself)). Mode B's `install.sh` installs the workflow commands
-> today; still on the roadmap: the re-runnable `/mise` skill and the templates
+> today — including **`/mise-init`**, the re-runnable setup/rescue/update entry point (the
+> installed form of `PROMPT.md`); still on the roadmap: the template library
 > ([`ARCHITECTURE.md`](./ARCHITECTURE.md)). Feedback welcome.
 
 `mise` is a paste-in prompt for [Claude Code](https://claude.com/claude-code) that interviews
@@ -63,17 +64,22 @@ config:
 
 ```sh
 git clone https://github.com/emadd/mise-en-claude
-cd mise-en-claude && ./install.sh          # installs /mise-cook, /mise-handoff + /mise-clean for all your projects
+cd mise-en-claude && ./install.sh          # installs /mise-init, /mise-update, /mise-cook, /mise-handoff, /mise-clean for all your projects
 # or:  ./install.sh --project .  # install into just this project's ./.claude
 ```
 
-That gives you **`/mise-cook`** (kitchen brigade), **`/mise-handoff`** (session hand-off), and
-**`/mise-clean`** (hygiene sweep), plus the orchestration playbook, globally or per-project. The install is non-destructive and idempotent: it
-backs up any command file you'd edited before replacing it, and skips files already current.
+That gives you **`/mise-init`** (the re-runnable setup / rescue / update entry point — the
+installed form of `PROMPT.md`, so you get the full Mode A flow as a command you can re-run),
+**`/mise-update`** (refresh the installed commands to the latest published version),
+**`/mise-cook`** (kitchen brigade), **`/mise-handoff`** (session hand-off), and **`/mise-clean`**
+(hygiene sweep — junk in git, scratch files, stale branches, plus an opt-in `CLAUDE.md` audit if
+you ask for one), plus the orchestration playbook and a vendored copy of the setup prompt, globally
+or per-project. The install is non-destructive and idempotent: it backs up any command file you'd
+edited before replacing it, and skips files already current.
 
-Still on the roadmap: the re-runnable **`/mise` skill** and the **template library**, so `/mise`
-can act as an updater whenever your project drifts. For the full setup/rescue flow today, use
-**Mode A** above.
+Once installed, `/mise-init` is the everyday entry point: run it in any project to set it up fresh,
+rescue an existing tangle, or reconcile a drifted one against the latest guidance — it reads the
+vendored prompt and auto-detects which. Still on the roadmap: the **template library**.
 
 ### Staying up to date
 
@@ -82,12 +88,16 @@ can act as an updater whenever your project drifts. For the full setup/rescue fl
 - **Mode A (paste):** the prompt lives only in your session, so "updating `mise`" just means
   **re-copying the latest `PROMPT.md` and pasting it into a fresh session.** There is nothing
   installed to update, and nothing to run.
-- **Mode B (planned):** once the installed `/mise` skill ships, updating becomes a real command
-  you run once, and `/mise` picks up the latest on its own.
+- **Mode B (installed):** run **`/mise-update`** — it fetches the latest published `main` and
+  re-installs the vendored commands and prompt for you (non-destructively), then `/mise-init` picks
+  up the latest on its own the next time you run it. Doing it by hand is equivalent: re-run
+  `install.sh` from a fresh `git pull` of this repo. Either way, install from a clean checkout of
+  `main`, never from a working copy you've been editing — `install.sh` copies whatever tree it sits
+  in, so a dirty local repo would install your un-pushed changes instead of the release.
 
 Note this is separate from **Update mode** (below), which brings *your project's* foundation up to
-the latest guidance. Updating the *tool* is the paste/skill above; updating your *project* is
-Update mode.
+the latest guidance. Updating the *tool* is `/mise-update` (or the paste/re-install) above; updating
+your *project* is Update mode (run `/mise-init` and pick **Update**, or just paste `PROMPT.md`).
 
 ---
 
@@ -201,6 +211,13 @@ This tool modifies your environment, so it behaves like a disciplined engineer, 
   cloud-adaptive**: it prefers local dev, but if you start in the cloud it does the portable work
   there and hands the local-only parts (native builds, simulators, signing) back to a local
   session.
+- **Audits the brain you already have.** `CLAUDE.md` is the one file written once and then read by
+  every future session — which is exactly why it rots unnoticed, and why every stale line quietly
+  misinforms every agent that follows. On an update, mise re-reads it against your actual code and
+  docs: it fixes what it can prove wrong (a renamed script, a path that moved), and shows you what
+  it thinks is dead weight — sections your `README` already says, advice Claude already knows —
+  with the diff and the reason. It fixes facts on its own; it asks before it cuts, because a rule
+  that looks strange is usually a scar from something that bit you.
 - **Meets you at your level.** It asks how comfortable you are and calibrates: plain language by
   default, jargon only where it helps. It leads with the short version and layers the detail on
   request, so what you get back is something you can actually absorb, not a wall of text.

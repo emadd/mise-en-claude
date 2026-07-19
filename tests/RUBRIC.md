@@ -78,6 +78,17 @@ model** — so the rubric is model-agnostic and every run should be graded, not 
   coordinate convention). Includes the context-hygiene / hand-off section.
 - **FAIL:** A generic template that would fit any project of that stack.
 
+### Q1a — The `CLAUDE.md` audit is verified, not vibed
+*Fixture: `rescue-rotted-brain` (answer key in [`fixtures/README.md`](fixtures/README.md)).*
+- **PASS (update / rescue-with-existing-brain):** Claims in `CLAUDE.md` are checked against
+  ground truth — a named path is `ls`'d, a named command is run or grepped for — and stale ones
+  are *fixed and reported*. Duplication with the `README`/`ARCHITECTURE` and model-generic advice
+  are surfaced as grouped proposals with the diff and the reason. A tight, accurate brain gets a
+  one-sentence "it's current" and no manufactured trim.
+- **FAIL:** Declares lines stale or redundant by reasoning alone, without checking the code.
+  Deletes an authored rule it merely finds unnecessary. Emits a line-by-line checkbox cart of
+  trim candidates. Strips the specific, odd-looking gotchas — the highest-value lines in the file.
+
 ### Q2 — A near-no-op rescue is honored
 - **PASS:** On an already-healthy project, the run does the *right amount* — often just
   `CLAUDE.md` + stamp — and says so. No manufactured busywork (pointless reorgs, unneeded

@@ -3,13 +3,15 @@
 # mise install.sh — Mode B (commands).
 #
 # Installs mise's vendored workflow commands into your Claude Code config:
+#   /mise-init     — the re-runnable setup / rescue / update entry point
+#   /mise-update   — refresh the installed commands to the latest published version
 #   /mise-cook     — the kitchen-brigade multi-agent workflow
 #   /mise-handoff  — write a durable session hand-off
 #   /mise-clean    — sweep the project for hygiene cruft
-# plus WORKFLOW-ORCHESTRATION.md (the /mise-cook playbook).
+# plus WORKFLOW-ORCHESTRATION.md (the /mise-cook playbook) and mise-PROMPT.md (the canonical
+# setup prompt that /mise-init reads — so the re-runnable entry point works with no network fetch).
 #
-# The re-runnable /mise skill + the template library are still roadmap (see ARCHITECTURE.md);
-# this installs the commands that exist today.
+# The template library is still roadmap (see ARCHITECTURE.md); this installs what exists today.
 #
 # Usage:
 #   ./install.sh                 # install for ALL your projects (~/.claude)
@@ -49,7 +51,7 @@ while [ $# -gt 0 ]; do
 done
 
 # Verify we're running from a mise checkout that actually has the files.
-for f in commands/mise-cook.md commands/mise-handoff.md commands/mise-clean.md WORKFLOW-ORCHESTRATION.md; do
+for f in commands/mise-init.md commands/mise-update.md commands/mise-cook.md commands/mise-handoff.md commands/mise-clean.md WORKFLOW-ORCHESTRATION.md PROMPT.md; do
   if [ ! -f "$REPO/$f" ]; then
     echo "error: $REPO/$f not found — run install.sh from a mise checkout." >&2
     exit 1
@@ -57,10 +59,13 @@ for f in commands/mise-cook.md commands/mise-handoff.md commands/mise-clean.md W
 done
 
 echo "mise: installing the workflow commands into $SCOPE"
+echo "  -> $TARGET/commands/mise-init.md"
+echo "  -> $TARGET/commands/mise-update.md"
 echo "  -> $TARGET/commands/mise-cook.md"
 echo "  -> $TARGET/commands/mise-handoff.md"
 echo "  -> $TARGET/commands/mise-clean.md"
 echo "  -> $TARGET/WORKFLOW-ORCHESTRATION.md"
+echo "  -> $TARGET/mise-PROMPT.md"
 echo
 
 if [ "$ASSUME_YES" -eq 0 ]; then
@@ -90,11 +95,15 @@ install_file() {
   echo "  + $dst"
 }
 
+install_file commands/mise-init.md       "$TARGET/commands/mise-init.md"
+install_file commands/mise-update.md     "$TARGET/commands/mise-update.md"
 install_file commands/mise-cook.md       "$TARGET/commands/mise-cook.md"
 install_file commands/mise-handoff.md    "$TARGET/commands/mise-handoff.md"
 install_file commands/mise-clean.md      "$TARGET/commands/mise-clean.md"
 install_file WORKFLOW-ORCHESTRATION.md   "$TARGET/WORKFLOW-ORCHESTRATION.md"
+install_file PROMPT.md                   "$TARGET/mise-PROMPT.md"
 
 echo
-echo "Done. Start (or restart) Claude Code and try:  /mise-cook <a multi-part goal>"
-echo "Sweep up any time with:  /mise-clean     Hand-off with:  /mise-handoff"
+echo "Done. Start (or restart) Claude Code and try:  /mise-init   (set up, rescue, or update this project)"
+echo "Update mise itself later with:  /mise-update"
+echo "Orchestrate with:  /mise-cook <a multi-part goal>     Sweep up:  /mise-clean     Hand-off:  /mise-handoff"
