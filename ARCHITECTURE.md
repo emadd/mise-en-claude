@@ -33,9 +33,10 @@ How the Install Prompt is built.
    becoming one. (Prime Directive 4; Phase 2 deeper-audit offer; Reference — context-safe
    auditing.)
 9. **Context-window discipline in produced agents.** The foundation `mise` lays makes agents
-   treat context as a finite budget — warn early, hand off to a durable artifact, refuse to run
-   into silent auto-compaction. A clean hand-off beats a lossy compression. (Guiding principle;
-   written into `CLAUDE.md` in Phase 4 and the `/mise-handoff` shortcut in Phase 7.)
+   treat context as a finite budget — checkpoint state to a durable artifact as they go (so
+   compaction is a non-event), warn early, and never overflow with state held only in chat. A
+   durable checkpoint beats a lossy compression. (Guiding principle; written into `CLAUDE.md` in
+   Phase 4, the `/mise-cook` durable rail, and the `/mise-handoff` shortcut in Phase 7.)
 10. **Capability-gated, but honest about it.** `mise` assumes a frontier-class model and opens
     with a soft capability gate (restate-the-directives self-check + graceful degradation to
     read-only). **It does NOT pretend to detect the model** — self-report is unreliable and

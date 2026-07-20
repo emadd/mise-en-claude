@@ -22,6 +22,9 @@ Write these six fields, tight and specific (focus: **$ARGUMENTS** if given):
 
 **Pick the durable target, most-programmatic first:**
 
+- **If the session already keeps a running checkpoint** (the durable rail from `/mise-cook`),
+  that artifact *is* the target — finalize it in place with these six fields. Never mint a
+  second artifact for the same work.
 - Check `.mise/state.json` for a `tracker` the project was set up with. If it names a platform
   other than GitHub Issues (Jira, Linear, Asana, Trello, etc.) and it's reachable this session
   (MCP/API/CLI), **write the hand-off there** — a task or comment tagged `handoff` — so it lives

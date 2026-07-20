@@ -1,7 +1,7 @@
 # mise — design notes (proposals, not yet built)
 
-Status: **draft on `dev`, unpublished.** Nothing here is implemented. This is where we decide the
-shape before writing code.
+Status: **draft on `dev`, unpublished.** Sections marked **SHIPPED** are built; everything else
+is proposal. This is where we decide the shape before writing code.
 
 ---
 
@@ -168,6 +168,33 @@ to experience level (Prime Directive 6), like everything else.
 
 Lives in: the workflow/kitchen guidance (§2) and mise's setup phases (a QA/verification foundation
 alongside Phase 7 persistence).
+
+---
+
+## 5. The durable rail — checkpoint as you go (SHIPPED 2026-07-20)
+
+**Origin:** the compaction question — would `/mise-handoff` make context compaction moot? The
+answer inverted the claim: a hand-off doesn't make compaction *moot*, it makes it *harmless* —
+compaction's real failure is fidelity (a lossy summary, written under context pressure,
+transcribing unverified claims, kept in the most perishable place there is), not interruption.
+If the load-bearing state already lives in a durable artifact, the summary can be as lossy as it
+likes and the session rolls straight through — no new session needed.
+
+**Decision: this is core `/mise-cook` behavior, not a separate mode or hook.** The rail lives in
+one durable artifact (tracker task / GitHub issue / `HANDOFF.md` — the `/mise-handoff` ladder),
+opened once the work is genuinely multi-step and **updated in place at every phase boundary**,
+with the hand-off fields and the hand-off's re-verify-live honesty bar. Two disciplines carried
+with it: checkpoint at boundaries while quality is high (never at the context cliff, where the
+agent is most degraded), and after a compaction re-anchor from the checkpoint + ground truth,
+never the summary alone. `/mise-handoff` stays the explicit stop-and-hand-off and finalizes the
+running checkpoint rather than minting a second artifact.
+
+**Considered and rejected:** a PreCompact-hook-triggered hand-off (behavior beats harness
+config, and the cliff-edge checkpoint is the worst one); a separate `/mise-handoff checkpoint`
+mode (if it's how work should always run, it belongs in the workflow, not behind a flag).
+
+Lands in: `commands/mise-cook.md`, `WORKFLOW-ORCHESTRATION.md` §6 + mechanism section,
+`commands/mise-handoff.md` target ladder.
 
 ---
 

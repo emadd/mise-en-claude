@@ -130,18 +130,25 @@ known manual list and **automate everything on the near side of it.** A human co
 
 The agents this project runs (including the ones you set up) must be **context-window aware.** A
 session that runs past its window doesn't fail loudly — it silently auto-compacts, and fidelity
-quietly dies: decisions forgotten, files half-remembered, subtle regressions. A clean hand-off
-always beats a lossy compression.
+quietly dies: decisions forgotten, files half-remembered, subtle regressions. The defense is to
+keep the load-bearing state *outside* the window: then a compaction is a non-event, and a fresh
+session loses nothing that matters.
 
 So the foundation you lay must make agents:
 
 - **Track the budget** — stay aware of how full the context is.
+- **Checkpoint as they go** — once work is genuinely multi-step, keep a *running checkpoint* in
+  a durable artifact (the project's tracker, a GitHub issue, or `HANDOFF.md`): goal,
+  verified-done, next, key decisions, files touched, gotchas — **updated in place at phase
+  boundaries**, while quality is high, never at the cliff. With it, compaction costs nothing:
+  the session re-anchors on the checkpoint plus ground truth (git log, the artifact), never the
+  summary alone, and rolls on without coining a new session.
 - **Warn early** — flag when the window is getting tight, before quality degrades.
-- **Offer a hand-off** — persist state to a durable artifact (a GitHub issue, a `HANDOFF.md`,
-  updated `CLAUDE.md`): what's done, what's next, key decisions, files touched — enough that a
-  *fresh* session resumes losslessly.
-- **Refuse to overflow** — stop and hand off rather than push into auto-compaction. Scope tasks
-  small enough to finish inside a window; when one won't, split it.
+- **Hand off cleanly when stopping** — finalize the checkpoint (or write one) so a *fresh*
+  session resumes losslessly.
+- **Never overflow uncheckpointed** — with state held only in chat, stop and hand off rather
+  than push into auto-compaction; fidelity lost there is invisible. Scope tasks small enough to
+  finish inside a window; when one won't, split it — or checkpoint through it.
 
 This is how the kitchen brigade already works — stations finish a dish and hand it off cleanly
 at the pass; nobody tries to hold the whole menu in their head at once. Bake this into the
@@ -536,8 +543,9 @@ Rescue: append to an existing `.gitignore`, never replace it.
   its structure, key modules, conventions, and gotchas. Keep it short and human-readable; this
   single act makes every future Claude session smarter. If a `CLAUDE.md` exists, **merge/append**
   — never clobber. Include a short **Context hygiene** section encoding the context-budget
-  contract (per the Guiding principle): warn when the window gets tight, hand off to a durable
-  artifact, keep tasks small enough to finish in one window, don't run into auto-compaction.
+  contract (per the Guiding principle): checkpoint multi-step work to a durable artifact as you
+  go, warn when the window gets tight, keep tasks small enough to finish in one window, never
+  run into auto-compaction with state held only in chat.
   **If a `CLAUDE.md` exists, audit it — unconditionally, whether or not you have anything to
   merge** (see *Reference — auditing `CLAUDE.md`*). **Rescue is where the brain is most likely to
   be rotten** — nobody has re-read it since it was written, which is the whole reason you were
@@ -859,12 +867,18 @@ The rule: **fix the leak without ever holding the secret.**
 What "context-window aware" means in practice, for agents this project runs:
 
 - **Budget awareness.** Keep a rough sense of context consumed; treat the window as finite.
+- **Checkpoint as you go.** Once work is genuinely multi-step, keep a *running checkpoint* in a
+  durable artifact (tracker task, GitHub issue, or `HANDOFF.md`): *goal · verified-done · next ·
+  key decisions · files touched · gotchas* — updated in place at phase boundaries, while output
+  is still high-fidelity, never at the cliff edge. With it, compaction is a non-event: re-anchor
+  on the checkpoint + ground truth (git log, the artifact), never the summary alone, and keep
+  going.
 - **Warn early**, while output is still high-fidelity — not at the cliff edge.
-- **Hand off, don't compact.** When a task won't finish in the remaining window, write a
-  hand-off (issue or `HANDOFF.md`): *goal · done · next · key decisions · files touched · gotchas*
-  — enough for a fresh session to resume with no loss — then stop. A clean fresh start beats a
-  silently compressed one.
+- **Hand off when stopping.** When a task won't finish in the remaining window and no checkpoint
+  exists, write the hand-off — same fields — then stop. A clean fresh start beats a silently
+  compressed one.
 - **Scope to fit.** Prefer tasks small enough to complete in one window. Split a big task up
   front rather than discovering the window's edge mid-flight.
-- **Refuse the overflow.** Do not push a session into auto-compaction to "just finish" —
-  fidelity lost there is invisible and expensive. Hand off instead.
+- **Refuse the uncheckpointed overflow.** Never push a session into auto-compaction with the
+  state held only in chat — fidelity lost there is invisible and expensive. Checkpoint first, or
+  hand off.

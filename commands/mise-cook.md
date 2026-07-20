@@ -62,12 +62,28 @@ must serialize; set up the pass (integration worktree) and fire. Keep a task lis
 **If a task isn't separable, serialize or solo it** — don't force a fan-out that just makes two
 agents fight over one file.
 
+**The rail is durable — checkpoint as you go.** Once the work is genuinely multi-step (a station
+fired, or more than a couple of plates), the rail lives in ONE durable artifact — the project's
+tracker (per `.mise/state.json`), a GitHub issue, or `HANDOFF.md`, the same target ladder as
+`/mise-handoff` — **updated in place at every phase boundary**: a plate integrated, a decision
+made, a gotcha learned. Write the hand-off fields (goal, verified-done, next, key decisions,
+files touched, gotchas), and hold the hand-off's honesty bar: "done" goes in only re-verified,
+live. This is what makes context compaction a non-event: the load-bearing state lives outside
+the window, so the session rolls straight through it — and any fresh session can resume from the
+artifact without a special hand-off. Two disciplines: **checkpoint at boundaries, while quality
+is high — never wait for the context gauge to redline** (a checkpoint written at the cliff is
+written by the agent at its most degraded); and after a compaction, **re-anchor from the
+checkpoint plus ground truth (git log, the artifact), never from the summary alone**.
+`/mise-handoff` remains the explicit stop-and-hand-off; when a running checkpoint exists, it
+finalizes that same artifact — never a second one.
+
 **Solo is a first-class mode, not a fallback.** Most goals that reach `/mise-cook` are not big
 enough to justify a pass and stations — that's normal, not a miss. When soloing: work directly
 in the current branch/worktree (no pass is cut, so there's nothing to keep off `main` beyond
 your normal branch discipline), and rule 5's verification standard still applies in full — don't
 trust a stale claim (a notes file, an old comment) that something already works; re-run it
-yourself before building on it or reporting it done.
+yourself before building on it or reporting it done. The durable-rail checkpoint applies solo
+just the same once the work is multi-step — solo sessions compact too.
 
 Some work **can't** be delegated to a station — it needs the human's live machine, hardware,
 credentials, or on-device/manual verification. That's the *tight interactive loop*, not a

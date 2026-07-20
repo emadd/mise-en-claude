@@ -34,7 +34,7 @@ so serious.
 | **The pass** | The integration branch | Where every plate lands, gets verified, and is integrated. The Sous-Chef works the pass. |
 | **The window** | The human's review → eventual `main` | Where a verified plate goes to the table. |
 | **The walk-in** | `main` | Cold storage. Pull from it and send to it **only when the human says**. |
-| **The rail** | The task list | What's fired, what's cooking, what's the running total. |
+| **The rail** | The task list + its durable checkpoint | What's fired, what's cooking, what's the running total — mirrored to a durable artifact so it survives compaction and session death. |
 
 Shared language: **fire** = start a lane. **86** = kill it (wedged agent, dead environment,
 dropped lane). **in the weeds** = the machine is saturated. **corner! / behind!** = a handoff,
@@ -131,6 +131,20 @@ defenses, use both:
 - Decisions → `docs/`, committed as you make them.
 - Hard-won gotchas → durable notes / memory, so the next service inherits them. A recipe learned
   the hard way gets written on the wall, not re-burned next week.
+- **The rail is durable — checkpoint as you go.** Once the work is genuinely multi-step (a
+  station fired, or more than a couple of plates), keep the rail in ONE durable artifact — the
+  project's tracker (per `.mise/state.json`), a GitHub issue, or `HANDOFF.md`, the same target
+  ladder as `/mise-handoff` — and **update it in place at every phase boundary** (plate
+  integrated, decision made, gotcha learned) with the hand-off fields: goal, verified-done,
+  next, key decisions, files touched, gotchas. Same honesty bar as a hand-off: "done" is
+  written only re-verified, live.
+- **Why: compaction becomes a non-event.** The load-bearing state lives outside the context
+  window, so the session rolls straight through a compaction and any fresh session can resume
+  losslessly — no need to coin a new one. Checkpoint **at boundaries, while quality is high** —
+  a checkpoint written at the context cliff is written by the agent at its most degraded. After
+  a compaction, **re-anchor from the checkpoint + ground truth (git log, the artifact), never
+  from the summary alone.** `/mise-handoff` remains the explicit stop-and-hand-off; with a
+  running checkpoint it finalizes that same artifact rather than minting a second one.
 - **The human supplies the taste and the call; the brigade executes.** Surface choices with a
   crisp recommendation — don't make the call for them, but don't stall the line on a default.
 
@@ -150,7 +164,8 @@ The six moves are the *doctrine*; here's how they map to actual tool calls:
   use whatever tier names your tool actually exposes (routine → workhorse, hard/risky → strongest,
   mechanical → cheapest).
 - **The rail (task list):** track *fired / cooking / done* with the **TodoWrite** tool (or a
-  scratch `TASKS.md`), updated as stations land.
+  scratch `TASKS.md`), updated as stations land — and mirror it to the **durable checkpoint**
+  (tracker task / GitHub issue / `HANDOFF.md`) at each phase boundary, per §6.
 - **Integrate a plate:** in the pass worktree, `git merge --no-ff <station-branch>`, then re-run
   the build/tests on the combined tree.
 - **The window:** merge the pass into `main` **only when the human says**.
