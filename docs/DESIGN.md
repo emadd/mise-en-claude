@@ -275,12 +275,47 @@ existing "Running it" section (itself already a per-tool mapping, not doctrine):
 otherwise (the common case) stay on the manual path. Never treat invoking `/mise-cook` as the
 opt-in.
 
-**Why no clean-room validation run (unlike §5).** The durable-rail change altered *default*
-behavior of every `/mise-cook` run, so it needed unbriefed-model proof. This change is additive
-and opt-in-gated — it only activates in a session that has already separately opted into
+**Why no clean-room validation run at first (unlike §5).** The durable-rail change altered
+*default* behavior of every `/mise-cook` run, so it needed unbriefed-model proof. This change is
+additive and opt-in-gated — it only activates in a session that has already separately opted into
 `Workflow` — so the blast radius if the doc is subtly wrong is "a workflow script written
 suboptimally," not "the default playbook regresses." Sanity-checked directly against the live
-`Workflow` tool contract instead.
+`Workflow` tool contract at ship time instead of a clean-room run.
+
+**Validated live (2026-07-20, real `Workflow` tool run against this repo) — and the mapping above
+was wrong on one load-bearing point.** Once Ultracode was actually enabled in-session, ran the
+real thing instead of reasoning about the tool's documented contract: a disposable pass worktree
+off `dev` with a marker file committed to it, `parallel()`-fired stations A+B, a `pipeline`-style
+dependent station C in the same script call, a real `git merge --no-ff` of A+B into the pass by
+the Sous-Chef, then a *second*, separate `Workflow` invocation firing station D to see whether the
+merge became visible. All scratch worktrees/branches swept afterward.
+
+- **Confirmed as designed:** `agent()` + `isolation:'worktree'` does create a real, addressable
+  worktree+branch that survives the call once the agent commits (ground-truthed via
+  `git worktree list` and `git log`, not just the agent's self-report). Schema-validated
+  call-backs matched git reality in all 4 stations — no hallucinated SHAs or paths.
+- **Wrong as documented, confirmed 4-for-4 across two separate `Workflow` invocations (one after
+  real merges had already landed on the pass): the fresh worktree always forks from local `main`
+  — never from the pass, never from the calling session's current branch** — exact SHA match
+  every time (`git rev-parse main` == every station's parent commit). This means the table's "Fire
+  a station" row was incomplete to the point of being actively misleading: a station fired this
+  way starts from the walk-in, not the pass, regardless of what's already on the pass or how the
+  station was scheduled (`parallel` vs `pipeline` vs plain sequential — station C could not see A
+  or B's files for the same root-cause reason, not because `pipeline()` itself lacks a barrier).
+- **A workaround was tested and works:** from *inside* a station's isolated worktree (which has
+  normal git/Bash access — only the orchestrating *script* is sandboxed), `git remote add pass
+  <path>; git fetch pass <branch>; git merge --no-ff FETCH_HEAD` before starting the actual task
+  pulls the pass's current state in cleanly. Verified working on station D: it started blind to
+  A/B's files, ran the fetch+merge, and could see them immediately after.
+- **Corrected in `WORKFLOW-ORCHESTRATION.md`'s mechanism-variant section** (not just annotated —
+  the original "Fire a station" and "Serialized/dependent stations" bullets were rewritten): the
+  gotcha is now stated as a first-class caveat with the verified fix inline, and "verify the
+  call-back" is sharpened from "schema forces checkable claims" to "schema-shaped is not the same
+  as true — still check git yourself."
+- **Take-away for future validations:** reasoning about a tool's documented contract is not a
+  substitute for running it once real access exists. The original mapping was a plausible reading
+  of the tool description; it was still wrong on the single most load-bearing fact (where a
+  station's worktree comes from), and only running it surfaced that.
 
 Lands in: `WORKFLOW-ORCHESTRATION.md` ("Running it" mechanism section), `commands/mise-cook.md`
 (one-line pointer), `CHANGELOG.md`.

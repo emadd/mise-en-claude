@@ -187,22 +187,46 @@ benefit is **not** enough to call it, and invoking `/mise-cook` itself never sat
 Default to the manual mechanism above; use this variant only when Ultracode is **already** on.
 
 - **Fire a station** → `agent()` with `opts.isolation:'worktree'` — auto-creates the worktree; if
-  the agent commits, the branch/path survive the call (returned in the result), exactly like a
-  hand-run `git worktree add`.
+  the agent commits, the branch/path survive the call (returned in the result).
+- **⚠️ Validated gotcha — the fresh worktree forks from `main`, never from the pass.** Confirmed
+  live against this repo (4 stations, 2 separate `Workflow` invocations, one after real merges had
+  already landed on the pass): every `isolation:'worktree'` call starts from the repo's default
+  branch — **not** from the calling session's current branch, **not** from the pass, regardless of
+  where the Sous-Chef is sitting or what's already been integrated. A station whose task needs
+  anything that's on the pass/your working branch but not yet on `main` **will not see it** —
+  `pipeline()`/sequential ordering doesn't fix this either; every call starts from the same point
+  no matter when it fires. **The fix, verified working:** bake a pull-the-pass step into the
+  station's own prompt — it has normal git/Bash access even though the *script* doesn't:
+  ```
+  git remote add pass <absolute-path-to-the-pass-worktree> 2>/dev/null || true
+  git fetch pass <pass-branch>
+  git merge --no-ff FETCH_HEAD -m "pull pass state before working"
+  ```
+  Put this ahead of the actual task in every fire order that needs pass content — the same way the
+  no-sub-agents rule goes in every fire order regardless of task.
 - **Parallel disjoint stations** → `parallel(thunks)`. **Serialized/dependent stations** →
-  `pipeline(items, ...stages)`, or plain sequential `await`s for a strict chain.
+  `pipeline(items, ...stages)`, or plain sequential `await`s for a strict chain — this orders the
+  *script's* dispatch and lets a later stage read an earlier stage's returned data, but (per the
+  gotcha above) does **not** give a later station a merged view of an earlier station's files.
+  If the dependency is "station B needs to read the file station A just wrote," B's prompt needs
+  the same pull-the-pass fetch, pointed at A's branch specifically (or the pass, after the
+  Sous-Chef merges A into it).
 - **Model/effort right-sizing (§3)** → `opts.model` / `opts.effort` per `agent()` call.
 - **Concurrency cap (§4)** → `Workflow` self-caps at `min(16, cores−2)` concurrent, 1000 lifetime
   — the manual `nproc`/`uptime` sizing heuristic is for the manual path only.
 - **Verify the call-back (§5)** → pass `schema` so a station returns structured, checkable facts
-  instead of free text; the no-sub-agents rule still goes in every agent's prompt by hand — the
-  tool doesn't enforce it for you.
+  instead of free text — but schema-shaped is not the same as *true*: the no-sub-agents rule still
+  goes in every agent's prompt by hand, and the Sous-Chef still checks the claimed branch/commit
+  against real `git log`, same as the manual mechanism. A schema stops a station from returning an
+  unparseable ramble; it doesn't stop it from confidently reporting the wrong SHA.
 - **The bill** → a live `budget.total`/`spent()`/`remaining()` when the human gave a token target.
 
 **What doesn't change:** a `Workflow` script has no filesystem or git access — it can fire and
 collect, never merge. **The pass, the actual `--no-ff` integration, and the durable checkpoint
 stay the Sous-Chef's job**, done in the outer session after the script returns, exactly as in the
-manual mechanism. `log()` is progress narration, not the durable rail.
+manual mechanism. `log()` is progress narration, not the durable rail. And per the gotcha above,
+the Sous-Chef may also need to write the pull-the-pass step into fire orders — `Workflow` doesn't
+do that for you either.
 
 ## A worked example (3 stations)
 

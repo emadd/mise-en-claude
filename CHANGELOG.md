@@ -3,6 +3,22 @@
 Read top-down; entries are keyed to `VERSION`. After an update, `/mise-update` shows you the
 entries newer than your previously installed version — behavior changes, not file lists.
 
+## 2026.07.20.2 — Workflow-mechanism doc corrected against a live run
+
+- **Fixes a wrong claim shipped in 2026.07.20.1.** Ran the real `Workflow` tool against this repo
+  instead of just reasoning about its documented contract, and one load-bearing assumption was
+  wrong: `agent()` with `isolation:'worktree'` forks a station's fresh worktree from `main` (the
+  walk-in), **never** from the pass or the calling session's current branch — confirmed 4-for-4
+  across two separate `Workflow` invocations, one run after real merges had already landed on the
+  pass. `WORKFLOW-ORCHESTRATION.md`'s "Fire a station" and "Serialized/dependent stations" bullets
+  are corrected, not just annotated.
+- **A verified workaround is now documented inline:** a station's own prompt can pull the pass in
+  itself — `git remote add pass <path>; git fetch pass <branch>; git merge --no-ff FETCH_HEAD` —
+  from inside its isolated worktree, which has normal git/Bash access even though the orchestrating
+  script doesn't. Tested working on a live station that started blind to prior work and could see
+  it immediately after.
+- Full validation trail in `docs/DESIGN.md` §6 ("Validated live").
+
 ## 2026.07.20.1 — /mise-cook knows how to use Ultracode's Workflow tool
 
 - **`/mise-cook` now documents a Workflow-tool mechanism variant**, for sessions where the human
