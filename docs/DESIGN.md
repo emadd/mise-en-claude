@@ -196,6 +196,18 @@ mode (if it's how work should always run, it belongs in the workflow, not behind
 Lands in: `commands/mise-cook.md`, `WORKFLOW-ORCHESTRATION.md` §6 + mechanism section,
 `commands/mise-handoff.md` target ladder.
 
+**Validated (2026-07-20, `tests/durable-rail/` Run A, clean-room unbriefed readers):** Sonnet
+passes in full on the first try — checkpoint opened before plate 1, updated and committed at
+each boundary, correct ladder rung with reasoning. Haiku took three prose iterations to reach
+all-🔴 pass, and the debriefs of the failing attempts produced the doctrine's load-bearing
+wording: (1) doctrine stated as prose gets triaged as non-binding "overhead" — an obligation
+must occupy a **required output slot** (the mode announcement now demands "checkpoint: X" or
+"single plate, no rail"); (2) any sibling clause reads as an exemption — solo mode had to say
+three times that it does not waive the rail; (3) vague thresholds ("more than a couple of
+plates") are loopholes — the trigger is "more than one plate," decided before the first plate
+lands. Haiku still misses the 🟡s (commits the checkpoint late or not at all); the 🔴 floor
+holds from Haiku up, the full standard from workhorse tier up.
+
 ---
 
 ## Locked decisions + concrete flow

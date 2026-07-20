@@ -137,10 +137,10 @@ session loses nothing that matters.
 So the foundation you lay must make agents:
 
 - **Track the budget** — stay aware of how full the context is.
-- **Checkpoint as they go** — once work is genuinely multi-step, keep a *running checkpoint* in
-  a durable artifact (the project's tracker, a GitHub issue, or `HANDOFF.md`): goal,
-  verified-done, next, key decisions, files touched, gotchas — **updated in place at phase
-  boundaries**, while quality is high, never at the cliff. With it, compaction costs nothing:
+- **Checkpoint as they go** — when a task has more than one phase, open a *running checkpoint*
+  **up front** in a durable artifact (the project's tracker, a GitHub issue, or `HANDOFF.md`):
+  goal, verified-done, next, key decisions, files touched, gotchas — **updated in place at
+  phase boundaries**, while quality is high, never at the cliff. With it, compaction costs nothing:
   the session re-anchors on the checkpoint plus ground truth (git log, the artifact), never the
   summary alone, and rolls on without coining a new session.
 - **Warn early** — flag when the window is getting tight, before quality degrades.
@@ -867,10 +867,10 @@ The rule: **fix the leak without ever holding the secret.**
 What "context-window aware" means in practice, for agents this project runs:
 
 - **Budget awareness.** Keep a rough sense of context consumed; treat the window as finite.
-- **Checkpoint as you go.** Once work is genuinely multi-step, keep a *running checkpoint* in a
-  durable artifact (tracker task, GitHub issue, or `HANDOFF.md`): *goal · verified-done · next ·
-  key decisions · files touched · gotchas* — updated in place at phase boundaries, while output
-  is still high-fidelity, never at the cliff edge. With it, compaction is a non-event: re-anchor
+- **Checkpoint as you go.** When a task has more than one phase, open a *running checkpoint*
+  up front in a durable artifact (tracker task, GitHub issue, or `HANDOFF.md`): *goal ·
+  verified-done · next · key decisions · files touched · gotchas* — updated in place at phase
+  boundaries, while output is still high-fidelity, never at the cliff edge. With it, compaction is a non-event: re-anchor
   on the checkpoint + ground truth (git log, the artifact), never the summary alone, and keep
   going.
 - **Warn early**, while output is still high-fidelity — not at the cliff edge.

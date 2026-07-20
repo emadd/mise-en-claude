@@ -131,13 +131,14 @@ defenses, use both:
 - Decisions → `docs/`, committed as you make them.
 - Hard-won gotchas → durable notes / memory, so the next service inherits them. A recipe learned
   the hard way gets written on the wall, not re-burned next week.
-- **The rail is durable — checkpoint as you go.** Once the work is genuinely multi-step (a
-  station fired, or more than a couple of plates), keep the rail in ONE durable artifact — the
-  project's tracker (per `.mise/state.json`), a GitHub issue, or `HANDOFF.md`, the same target
-  ladder as `/mise-handoff` — and **update it in place at every phase boundary** (plate
-  integrated, decision made, gotcha learned) with the hand-off fields: goal, verified-done,
-  next, key decisions, files touched, gotchas. Same honesty bar as a hand-off: "done" is
-  written only re-verified, live.
+- **The rail is durable — checkpoint as you go.** If the goal has more than one plate or fires
+  any station — solo or brigade, mode doesn't waive this — keep the rail in ONE durable
+  artifact — the project's tracker (per
+  `.mise/state.json`), a GitHub issue, or `HANDOFF.md`, the same target ladder as
+  `/mise-handoff`. **Open it when the rail is first written — before the first plate lands** —
+  and **update it in place at every phase boundary** (plate integrated, decision made, gotcha
+  learned) with the hand-off fields: goal, verified-done, next, key decisions, files touched,
+  gotchas. Same honesty bar as a hand-off: "done" is written only re-verified, live.
 - **Why: compaction becomes a non-event.** The load-bearing state lives outside the context
   window, so the session rolls straight through a compaction and any fresh session can resume
   losslessly — no need to coin a new one. Checkpoint **at boundaries, while quality is high** —
