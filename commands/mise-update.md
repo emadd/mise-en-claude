@@ -30,7 +30,9 @@ Do exactly this:
    local checkout.
 
 3. **Show what "latest" resolved to:** `git -C "$TMP" log --oneline -1`, so the user sees the exact
-   published commit before anything is written.
+   published commit before anything is written. **Also record where the user is coming FROM,
+   before the installer overwrites the stamp:** `PREV="$(cat "<target>/mise-VERSION" 2>/dev/null
+   || echo none)"` (target = `~/.claude`, or the project's `.claude` if `--project`).
 
 4. **Run that clone's installer**, non-interactively, for the resolved scope:
    ```
@@ -44,7 +46,13 @@ Do exactly this:
    created — those are the user's rollback copies — and tell them the paths so they can delete them
    once satisfied.
 
-6. **Summarize** the result: the published commit installed, which files were updated (`+` / `~`)
+6. **Tell the user what changed in BEHAVIOR, not just which files moved.** Read the freshly
+   installed `<target>/mise-CHANGELOG.md` and relay the entries **newer than `PREV`** — all
+   entries if `PREV` is `none` (the stamp first ships with 2026.07.20). Lead
+   with these: a user updating deserves "here's what your commands now do differently," not a
+   file list. If nothing is newer than `PREV`, say the install was already current.
+
+7. **Summarize** the result: the published commit installed, which files were updated (`+` / `~`)
    vs. already current (`=`), where any backups landed, and remind the user to **restart Claude
    Code** to pick up refreshed commands.
 

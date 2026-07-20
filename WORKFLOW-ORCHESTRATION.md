@@ -34,7 +34,7 @@ so serious.
 | **The pass** | The integration branch | Where every plate lands, gets verified, and is integrated. The Sous-Chef works the pass. |
 | **The window** | The human's review → eventual `main` | Where a verified plate goes to the table. |
 | **The walk-in** | `main` | Cold storage. Pull from it and send to it **only when the human says**. |
-| **The rail** | The task list | What's fired, what's cooking, what's the running total. |
+| **The rail** | The task list + its durable checkpoint | What's fired, what's cooking, what's the running total — mirrored to a durable artifact so it survives compaction and session death. |
 
 Shared language: **fire** = start a lane. **86** = kill it (wedged agent, dead environment,
 dropped lane). **in the weeds** = the machine is saturated. **corner! / behind!** = a handoff,
@@ -131,6 +131,23 @@ defenses, use both:
 - Decisions → `docs/`, committed as you make them.
 - Hard-won gotchas → durable notes / memory, so the next service inherits them. A recipe learned
   the hard way gets written on the wall, not re-burned next week.
+- **The rail is durable — checkpoint as you go.** If the goal has more than one plate or fires
+  any station — solo or brigade, mode doesn't waive this — keep the rail in ONE durable
+  artifact — the project's tracker (per
+  `.mise/state.json`), a GitHub issue, or `HANDOFF.md`, the same target ladder as
+  `/mise-handoff`. **Open it when the rail is first written — before the first plate lands** —
+  and **update it in place at every phase boundary** (plate integrated, decision made, gotcha
+  learned) with the hand-off fields: goal, verified-done, next, key decisions, files touched,
+  gotchas. Same honesty bar as a hand-off: "done" is written only re-verified, live.
+- **Why: compaction becomes a non-event.** The load-bearing state lives outside the context
+  window, so the session rolls straight through a compaction and any fresh session can resume
+  losslessly — no need to coin a new one. Checkpoint **at boundaries, while quality is high** —
+  a checkpoint written at the context cliff is written by the agent at its most degraded. After
+  a compaction, **re-anchor from the checkpoint + ground truth (git log, the artifact), never
+  from the summary alone — the summary is briefing, never authority.** Read the checkpoint and
+  git log FIRST; verify any work the summary claims complete actually exists; never delete,
+  finalize, or mark done on the summary's say-so. `/mise-handoff` remains the explicit stop-and-hand-off; with a
+  running checkpoint it finalizes that same artifact rather than minting a second one.
 - **The human supplies the taste and the call; the brigade executes.** Surface choices with a
   crisp recommendation — don't make the call for them, but don't stall the line on a default.
 
@@ -150,7 +167,8 @@ The six moves are the *doctrine*; here's how they map to actual tool calls:
   use whatever tier names your tool actually exposes (routine → workhorse, hard/risky → strongest,
   mechanical → cheapest).
 - **The rail (task list):** track *fired / cooking / done* with the **TodoWrite** tool (or a
-  scratch `TASKS.md`), updated as stations land.
+  scratch `TASKS.md`), updated as stations land — and mirror it to the **durable checkpoint**
+  (tracker task / GitHub issue / `HANDOFF.md`) at each phase boundary, per §6.
 - **Integrate a plate:** in the pass worktree, `git merge --no-ff <station-branch>`, then re-run
   the build/tests on the combined tree.
 - **The window:** merge the pass into `main` **only when the human says**.
@@ -158,6 +176,57 @@ The six moves are the *doctrine*; here's how they map to actual tool calls:
 *Surface-agnostic:* this works on any Claude Code surface — CLI, Desktop app, web, IDE. You run
 the git/tool calls yourself regardless; the Desktop app in particular manages multiple worktree
 sessions visually, which suits running the line.
+
+### Mechanism variant: Ultracode's Workflow tool (opt-in only)
+
+Claude Code also exposes a **`Workflow`** tool — a deterministic script (`agent()`, `parallel()`,
+`pipeline()`, `budget`) that fires and tracks sub-agents mechanically. It maps cleanly onto the
+six moves, but it carries its **own strict opt-in gate** (the "ultracode" keyword/session flag, or
+an explicit ask in the user's own words) — a goal simply having enough separable stations to
+benefit is **not** enough to call it, and invoking `/mise-cook` itself never satisfies that gate.
+Default to the manual mechanism above; use this variant only when Ultracode is **already** on.
+
+- **Fire a station** → `agent()` with `opts.isolation:'worktree'` — auto-creates the worktree; if
+  the agent commits, the branch/path survive the call (returned in the result).
+- **⚠️ Validated gotcha — the fresh worktree forks from `main`, never from the pass.** Confirmed
+  live against this repo (4 stations, 2 separate `Workflow` invocations, one after real merges had
+  already landed on the pass): every `isolation:'worktree'` call starts from the repo's default
+  branch — **not** from the calling session's current branch, **not** from the pass, regardless of
+  where the Sous-Chef is sitting or what's already been integrated. A station whose task needs
+  anything that's on the pass/your working branch but not yet on `main` **will not see it** —
+  `pipeline()`/sequential ordering doesn't fix this either; every call starts from the same point
+  no matter when it fires. **The fix, verified working:** bake a pull-the-pass step into the
+  station's own prompt — it has normal git/Bash access even though the *script* doesn't:
+  ```
+  git remote add pass <absolute-path-to-the-pass-worktree> 2>/dev/null || true
+  git fetch pass <pass-branch>
+  git merge --no-ff FETCH_HEAD -m "pull pass state before working"
+  ```
+  Put this ahead of the actual task in every fire order that needs pass content — the same way the
+  no-sub-agents rule goes in every fire order regardless of task.
+- **Parallel disjoint stations** → `parallel(thunks)`. **Serialized/dependent stations** →
+  `pipeline(items, ...stages)`, or plain sequential `await`s for a strict chain — this orders the
+  *script's* dispatch and lets a later stage read an earlier stage's returned data, but (per the
+  gotcha above) does **not** give a later station a merged view of an earlier station's files.
+  If the dependency is "station B needs to read the file station A just wrote," B's prompt needs
+  the same pull-the-pass fetch, pointed at A's branch specifically (or the pass, after the
+  Sous-Chef merges A into it).
+- **Model/effort right-sizing (§3)** → `opts.model` / `opts.effort` per `agent()` call.
+- **Concurrency cap (§4)** → `Workflow` self-caps at `min(16, cores−2)` concurrent, 1000 lifetime
+  — the manual `nproc`/`uptime` sizing heuristic is for the manual path only.
+- **Verify the call-back (§5)** → pass `schema` so a station returns structured, checkable facts
+  instead of free text — but schema-shaped is not the same as *true*: the no-sub-agents rule still
+  goes in every agent's prompt by hand, and the Sous-Chef still checks the claimed branch/commit
+  against real `git log`, same as the manual mechanism. A schema stops a station from returning an
+  unparseable ramble; it doesn't stop it from confidently reporting the wrong SHA.
+- **The bill** → a live `budget.total`/`spent()`/`remaining()` when the human gave a token target.
+
+**What doesn't change:** a `Workflow` script has no filesystem or git access — it can fire and
+collect, never merge. **The pass, the actual `--no-ff` integration, and the durable checkpoint
+stay the Sous-Chef's job**, done in the outer session after the script returns, exactly as in the
+manual mechanism. `log()` is progress narration, not the durable rail. And per the gotcha above,
+the Sous-Chef may also need to write the pull-the-pass step into fire orders — `Workflow` doesn't
+do that for you either.
 
 ## A worked example (3 stations)
 

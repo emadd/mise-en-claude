@@ -199,8 +199,9 @@ This tool modifies your environment, so it behaves like a disciplined engineer, 
   value-blind even on config files that mix real code with secrets. The tool fixes leaks without
   becoming one.
 - **Context-window aware.** The foundation it lays makes your agents treat context as a budget:
-  warn when it's tight, hand off cleanly to a durable artifact, and refuse to run into silent
-  auto-compaction where fidelity quietly dies.
+  keep a running checkpoint in a durable artifact so compaction becomes a non-event, warn when
+  the window is tight, and never run into silent auto-compaction with state held only in chat —
+  that's where fidelity quietly dies.
 - **Runs on a capable model, and degrades safely if not.** `mise` assumes a frontier-class model
   and opens with a capability self-check. It can't truly *detect* the model (no prompt can), so if
   it's unsure it stays **read-only**: it gives you the report but refuses to edit, install, or

@@ -51,7 +51,7 @@ while [ $# -gt 0 ]; do
 done
 
 # Verify we're running from a mise checkout that actually has the files.
-for f in commands/mise-init.md commands/mise-update.md commands/mise-cook.md commands/mise-handoff.md commands/mise-clean.md WORKFLOW-ORCHESTRATION.md PROMPT.md; do
+for f in commands/mise-init.md commands/mise-update.md commands/mise-cook.md commands/mise-handoff.md commands/mise-clean.md WORKFLOW-ORCHESTRATION.md PROMPT.md VERSION CHANGELOG.md; do
   if [ ! -f "$REPO/$f" ]; then
     echo "error: $REPO/$f not found — run install.sh from a mise checkout." >&2
     exit 1
@@ -66,6 +66,8 @@ echo "  -> $TARGET/commands/mise-handoff.md"
 echo "  -> $TARGET/commands/mise-clean.md"
 echo "  -> $TARGET/WORKFLOW-ORCHESTRATION.md"
 echo "  -> $TARGET/mise-PROMPT.md"
+echo "  -> $TARGET/mise-VERSION"
+echo "  -> $TARGET/mise-CHANGELOG.md"
 echo
 
 if [ "$ASSUME_YES" -eq 0 ]; then
@@ -102,6 +104,8 @@ install_file commands/mise-handoff.md    "$TARGET/commands/mise-handoff.md"
 install_file commands/mise-clean.md      "$TARGET/commands/mise-clean.md"
 install_file WORKFLOW-ORCHESTRATION.md   "$TARGET/WORKFLOW-ORCHESTRATION.md"
 install_file PROMPT.md                   "$TARGET/mise-PROMPT.md"
+install_file VERSION                     "$TARGET/mise-VERSION"
+install_file CHANGELOG.md                "$TARGET/mise-CHANGELOG.md"
 
 echo
 echo "Done. Start (or restart) Claude Code and try:  /mise-init   (set up, rescue, or update this project)"
