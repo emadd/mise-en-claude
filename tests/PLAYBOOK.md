@@ -130,3 +130,12 @@ a release blocker.
   confirm the new behavior fires **on an unbriefed reader** (if you have to tell the reader
   about the fix for it to happen, the prompt edit didn't land).
 - On a new stack note: add or extend a fixture for that stack and run it.
+
+---
+
+## Other suites
+
+- [`durable-rail/`](durable-rail/) — token-cheap tests for the `/mise-cook` durable-rail
+  checkpoint (never tests compaction, tests the artifact): generated fixtures, three short
+  cheap-model runs, a script grader. Run it before any PR touching `commands/mise-cook.md`,
+  `commands/mise-handoff.md`, or `WORKFLOW-ORCHESTRATION.md` §6.
