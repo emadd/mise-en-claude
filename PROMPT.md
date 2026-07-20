@@ -870,9 +870,10 @@ What "context-window aware" means in practice, for agents this project runs:
 - **Checkpoint as you go.** When a task has more than one phase, open a *running checkpoint*
   up front in a durable artifact (tracker task, GitHub issue, or `HANDOFF.md`): *goal ·
   verified-done · next · key decisions · files touched · gotchas* — updated in place at phase
-  boundaries, while output is still high-fidelity, never at the cliff edge. With it, compaction is a non-event: re-anchor
-  on the checkpoint + ground truth (git log, the artifact), never the summary alone, and keep
-  going.
+  boundaries, while output is still high-fidelity, never at the cliff edge. With it, compaction
+  is a non-event: re-anchor on the checkpoint + ground truth (git log, the artifact), never the
+  summary alone — a summary is briefing, never authority; verify its claims against ground
+  truth before acting on them — and keep going.
 - **Warn early**, while output is still high-fidelity — not at the cliff edge.
 - **Hand off when stopping.** When a task won't finish in the remaining window and no checkpoint
   exists, write the hand-off — same fields — then stop. A clean fresh start beats a silently

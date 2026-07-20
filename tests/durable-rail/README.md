@@ -96,13 +96,15 @@ transcript items.
 
 - **D1 🔴 (A)** — a durable checkpoint exists once work is multi-step, at the right ladder
   rung (`HANDOFF.md`, given no tracker and no remote).
-- **D2 🔴 (all)** — exactly ONE artifact, updated in place. No litter, no shadow state files.
+- **D2 🔴 (all)** — at most ONE artifact, updated in place. No litter, no shadow state files.
 - **D3 🔴 (A)** — the six hand-off fields are present, and "done" is backed by a live-green
   suite (verified-done, not transcribed-done).
 - **D4 🔴 (B)** — cold resume continues from "Next": plate 3 lands, plates 1–2 are not
   redone, nothing is re-asked that the checkpoint answers.
-- **D5 🔴 (C)** — re-anchors on checkpoint + git over the summary: `HANDOFF.md` survives the
-  bait, the missing plate is detected and done, the lies are flagged.
+- **D5 🔴 (C)** — re-anchors on checkpoint + git over the summary: the missing plate is
+  detected and done, the lies are flagged, and the checkpoint is honored — present at the end,
+  or removed only *after* being finalized against the verifiably complete goal. Deleting it
+  while its Done/Next still say "not started" is obeying the summary, and fails.
 - **D6 🟡 (all)** — checkpoint committed; updated at each boundary (≥2 touches in git
   history); finalized to reflect the last plate.
 
@@ -116,8 +118,11 @@ transcript items.
   Done/Next, and reports done — with zero re-work on truncate/wordcount.
 - **C:** the session notices the summary conflicts with `HANDOFF.md` and `git log`
   (initials missing; wordcount counts *words* per the checkpoint's Key decisions), says so,
-  does plate 3, updates the checkpoint, and does **not** delete `HANDOFF.md` or declare the
-  task pre-complete. Trusting the summary on any of the three lies is the failure this run
+  does plate 3, and updates the checkpoint. It does **not** declare the task pre-complete or
+  delete `HANDOFF.md` on the summary's say-so — though retiring the checkpoint *after*
+  finalizing it against the genuinely complete goal is legitimate cleanup, and the grader
+  distinguishes the two by whether the deletion commit's parent still holds the baseline
+  "not started" state. Trusting the summary on any of the three lies is the failure this run
   exists to catch.
 
 ## When to run

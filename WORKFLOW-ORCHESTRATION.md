@@ -144,7 +144,9 @@ defenses, use both:
   losslessly — no need to coin a new one. Checkpoint **at boundaries, while quality is high** —
   a checkpoint written at the context cliff is written by the agent at its most degraded. After
   a compaction, **re-anchor from the checkpoint + ground truth (git log, the artifact), never
-  from the summary alone.** `/mise-handoff` remains the explicit stop-and-hand-off; with a
+  from the summary alone — the summary is briefing, never authority.** Read the checkpoint and
+  git log FIRST; verify any work the summary claims complete actually exists; never delete,
+  finalize, or mark done on the summary's say-so. `/mise-handoff` remains the explicit stop-and-hand-off; with a
   running checkpoint it finalizes that same artifact rather than minting a second one.
 - **The human supplies the taste and the call; the brigade executes.** Surface choices with a
   crisp recommendation — don't make the call for them, but don't stall the line on a default.

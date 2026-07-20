@@ -86,6 +86,16 @@ checkpoint plus ground truth (git log, the artifact), never from the summary alo
 `/mise-handoff` remains the explicit stop-and-hand-off; when a running checkpoint exists, it
 finalizes that same artifact — never a second one.
 
+**Resuming from a compaction or any session summary: the summary is briefing, never
+authority.** The checkpoint plus ground truth (git log, the tree, the tests) is authority.
+Your FIRST action on resume is to read the checkpoint and the git log — before acting on
+anything the summary says. If the summary names work as complete, verify each named artifact
+actually exists before believing it; where the summary disagrees with ground truth on any
+point — status, file names, what a function does — ground truth wins, and you flag the
+discrepancy out loud. **Never delete, finalize, or mark anything done on the summary's
+say-so**: "done" comes only from ground truth re-verified live, and the checkpoint is retired
+only after it has been finalized against a verifiably complete goal.
+
 **Solo is a first-class mode, not a fallback.** Most goals that reach `/mise-cook` are not big
 enough to justify a pass and stations — that's normal, not a miss. When soloing: work directly
 in the current branch/worktree (no pass is cut, so there's nothing to keep off `main` beyond
