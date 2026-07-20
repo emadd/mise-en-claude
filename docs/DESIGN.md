@@ -227,6 +227,66 @@ finalize-before-retire.
 
 ---
 
+## 6. Adapting to Ultracode's Workflow tool (SHIPPED 2026-07-20)
+
+**The trigger:** Claude Code now ships a `Workflow` tool — a deterministic script (`agent()`,
+`parallel()`, `pipeline()`, `budget`) that fans work out to sub-agents with per-agent worktree
+isolation, model/effort control, and token budgeting built in. It's a second, more mechanical way
+to run exactly the fan-out `/mise-cook` already does by hand. Does the playbook adopt it, and how?
+
+**The gate that shapes the answer.** `Workflow` carries its own strict opt-in contract: it may
+only be called when the user has explicitly opted into multi-agent orchestration (the "ultracode"
+keyword/session flag, an explicit ask in the user's own words, or a named saved workflow) —
+everything else, including a goal that would clearly benefit from parallelism, must not call it.
+`/mise-cook`'s existing mechanism (the Agent/Task tool + manual `git worktree`) carries no such
+gate; it's ordinary Claude Code behavior on every surface. **These are two different permission
+tiers, not two names for the same thing** — running `/mise-cook` itself must never count as
+opting into `Workflow`. This is §3's "reserve the most expensive/experimental tier for the
+human's explicit say-so" one level up: at the orchestration-*mechanism* level, not just the
+model-tier level.
+
+**A hard mechanical constraint that shapes the mapping.** A `Workflow` script runs sandboxed — no
+filesystem, no Node APIs, no git. It can spawn agents and collect their (optionally
+schema-validated) return values; it **cannot** run `git merge`. So even when `Workflow` is in
+play, **the pass stays real and stays the Sous-Chef's job** — the outer session, not the script,
+does the actual worktree setup and `--no-ff` integration, using the branch/path each `agent()`
+call hands back. `Workflow` replaces the *fire* half of §5's loop, never the *integrate* half —
+and its `log()` is progress narration, not the durable rail; the Sous-Chef still writes the real
+checkpoint.
+
+**Decision: document the mapping as a mechanism variant, don't change default behavior.** Add a
+"Mechanism variant: Ultracode's Workflow tool" subsection to `WORKFLOW-ORCHESTRATION.md`'s
+existing "Running it" section (itself already a per-tool mapping, not doctrine):
+
+| Kitchen move | Manual mechanism (default) | `Workflow` mechanism (opt-in only) |
+|---|---|---|
+| Fire a station | `Agent` tool call + `git worktree add` | `agent()` with `opts.isolation:'worktree'` |
+| Parallel disjoint stations | Multiple `Agent` calls, one message | `parallel(thunks)` |
+| Serialized/dependent stations | Await sequentially | `pipeline(items, ...stages)` |
+| Right-size model/effort (§3) | Tool's model param | `opts.model` / `opts.effort` per call |
+| Cap concurrency to host (§4) | Manual `nproc`/`uptime` sizing | Self-capped: `min(16, cores−2)`, 1000 lifetime |
+| Verify the call-back (§5) | Read free text, check `git log` | `schema` forces structured, checkable claims |
+| The bill (cost honesty) | Prose honesty | Live `budget.total`/`spent()`/`remaining()` |
+| Integrate at the pass | `git merge --no-ff` in the pass worktree | **Unchanged** — still the Sous-Chef, outside the script |
+| The rail's durable checkpoint (§6 of the playbook) | Sous-Chef writes it | **Unchanged** — same |
+
+**What `mise-cook.md` gets:** one line, not a rewrite — if Ultracode is *already* on when
+`/mise-cook` fires, prefer scripting the fan-out through `Workflow` per the mapping above;
+otherwise (the common case) stay on the manual path. Never treat invoking `/mise-cook` as the
+opt-in.
+
+**Why no clean-room validation run (unlike §5).** The durable-rail change altered *default*
+behavior of every `/mise-cook` run, so it needed unbriefed-model proof. This change is additive
+and opt-in-gated — it only activates in a session that has already separately opted into
+`Workflow` — so the blast radius if the doc is subtly wrong is "a workflow script written
+suboptimally," not "the default playbook regresses." Sanity-checked directly against the live
+`Workflow` tool contract instead.
+
+Lands in: `WORKFLOW-ORCHESTRATION.md` ("Running it" mechanism section), `commands/mise-cook.md`
+(one-line pointer), `CHANGELOG.md`.
+
+---
+
 ## Locked decisions + concrete flow
 
 **Decisions (locked):**

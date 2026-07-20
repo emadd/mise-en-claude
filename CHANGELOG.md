@@ -3,6 +3,21 @@
 Read top-down; entries are keyed to `VERSION`. After an update, `/mise-update` shows you the
 entries newer than your previously installed version — behavior changes, not file lists.
 
+## 2026.07.20.1 — /mise-cook knows how to use Ultracode's Workflow tool
+
+- **`/mise-cook` now documents a Workflow-tool mechanism variant**, for sessions where the human
+  has already opted into Ultracode's multi-agent `Workflow` tool (the "ultracode" flag, or their
+  own explicit ask) — separately from firing `/mise-cook`. See `WORKFLOW-ORCHESTRATION.md`'s
+  "Mechanism variant" for the fire/parallel/serialize/model/verify/cost mapping.
+- **This does not change default behavior.** `/mise-cook`'s manual Agent-tool + git-worktree
+  mechanism stays the default on every run; running `/mise-cook` itself never counts as opting
+  into `Workflow` — that gate is Anthropic's, and it's stricter than mise's own.
+- **One thing that never moves:** a `Workflow` script has no filesystem or git access, so the
+  pass, the actual `--no-ff` integration, and the durable checkpoint stay the Sous-Chef's job in
+  the outer session either way.
+- Design reasoning in `docs/DESIGN.md` §6; no clean-room validation run for this one — it's
+  additive and opt-in-gated, not a change to what runs by default.
+
 ## 2026.07.20 — the durable rail: /mise-cook now checkpoints as it goes
 
 - **`/mise-cook` keeps its task rail in a durable artifact** — your project's tracker, a GitHub

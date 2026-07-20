@@ -63,6 +63,13 @@ worktree/branch. Run service on these six moves:
    Surface choices with a crisp recommendation — the human supplies the call, the brigade
    executes. The window (a merge to `main`) opens only when the human authorizes it.
 
+**If Ultracode is already on** (the human opted into multi-agent orchestration separately from
+firing `/mise-cook` — the "ultracode" flag, or their own explicit ask), you may script the fan-out
+through the `Workflow` tool instead of manual `Agent` calls — see `WORKFLOW-ORCHESTRATION.md`'s
+"Mechanism variant" for the mapping. **Never call `Workflow` on `/mise-cook`'s say-so alone** —
+the two opt-ins are separate, and the pass/integrate/checkpoint steps stay yours either way, since
+a `Workflow` script has no filesystem or git access.
+
 Start by breaking **$ARGUMENTS** into separable stations; note what runs in parallel vs. what
 must serialize; set up the pass (integration worktree) and fire. Keep a task list — the rail.
 **If a task isn't separable, serialize or solo it** — don't force a fan-out that just makes two

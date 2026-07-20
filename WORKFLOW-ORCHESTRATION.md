@@ -177,6 +177,33 @@ The six moves are the *doctrine*; here's how they map to actual tool calls:
 the git/tool calls yourself regardless; the Desktop app in particular manages multiple worktree
 sessions visually, which suits running the line.
 
+### Mechanism variant: Ultracode's Workflow tool (opt-in only)
+
+Claude Code also exposes a **`Workflow`** tool — a deterministic script (`agent()`, `parallel()`,
+`pipeline()`, `budget`) that fires and tracks sub-agents mechanically. It maps cleanly onto the
+six moves, but it carries its **own strict opt-in gate** (the "ultracode" keyword/session flag, or
+an explicit ask in the user's own words) — a goal simply having enough separable stations to
+benefit is **not** enough to call it, and invoking `/mise-cook` itself never satisfies that gate.
+Default to the manual mechanism above; use this variant only when Ultracode is **already** on.
+
+- **Fire a station** → `agent()` with `opts.isolation:'worktree'` — auto-creates the worktree; if
+  the agent commits, the branch/path survive the call (returned in the result), exactly like a
+  hand-run `git worktree add`.
+- **Parallel disjoint stations** → `parallel(thunks)`. **Serialized/dependent stations** →
+  `pipeline(items, ...stages)`, or plain sequential `await`s for a strict chain.
+- **Model/effort right-sizing (§3)** → `opts.model` / `opts.effort` per `agent()` call.
+- **Concurrency cap (§4)** → `Workflow` self-caps at `min(16, cores−2)` concurrent, 1000 lifetime
+  — the manual `nproc`/`uptime` sizing heuristic is for the manual path only.
+- **Verify the call-back (§5)** → pass `schema` so a station returns structured, checkable facts
+  instead of free text; the no-sub-agents rule still goes in every agent's prompt by hand — the
+  tool doesn't enforce it for you.
+- **The bill** → a live `budget.total`/`spent()`/`remaining()` when the human gave a token target.
+
+**What doesn't change:** a `Workflow` script has no filesystem or git access — it can fire and
+collect, never merge. **The pass, the actual `--no-ff` integration, and the durable checkpoint
+stay the Sous-Chef's job**, done in the outer session after the script returns, exactly as in the
+manual mechanism. `log()` is progress narration, not the durable rail.
+
 ## A worked example (3 stations)
 
 Goal: *"Add rate-limiting to the API — (1) a token-bucket middleware, (2) an admin config
